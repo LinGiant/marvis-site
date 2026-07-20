@@ -262,7 +262,7 @@ footer {
   padding-bottom: 20px;
 }
 
-/* ========== çæ ãæ¤¤ç¸æ½°éå³°ç´¡ ========== */
+/* ========== &#x5C55;&#x793A;&#x9875;&#x9762;&#x6837;&#x5F0F; ========== */
 body.view-page {
   display: flex;
   align-items: center;
@@ -389,13 +389,13 @@ body.view-page {
 </div>
 
 <script>
-// ============ é¢ç¸åæ¤¤ç¸æ½°é«æç·« ============
+// ============ \u751F\u6210\u9875\u9762\u903B\u8F91 ============
 let currentMode = 'text';
 let currentQrCode = null;
 let uploadedImageUrl = null;
-let qrContentString = ''; // æµå²æ·®é®ä½¸çéå¯ç´ªé®ä½ºæ®çæ¥îæ¶?
+let qrContentString = ''; // \u4E8C\u7EF4\u7801\u5B9E\u9645\u7F16\u7801\u7684\u5B57\u7B26\u4E32
 
-// --- çå§çéï¼å¢å¯®â¬é?---
+// --- \u8BBE\u7F6E\u5361\u7247\u5F00\u5173 ---
 let expireEnabled = false;
 let pwdEnabled = false;
 
@@ -413,10 +413,10 @@ function toggleSetting(type) {
     body.classList.toggle('open', expireEnabled);
     if (expireEnabled) {
       const dur = document.getElementById('expireDuration');
-      const labels = { '1':'1çå¿æ¤éåº¤ç¹é?,'6':'6çå¿æ¤éåº¤ç¹é?,'24':'24çå¿æ¤éåº¤ç¹é?,'72':'3æ¾¶âææ©å¨æ¹¡','168':'7æ¾¶âææ©å¨æ¹¡','720':'30æ¾¶âææ©å¨æ¹¡' };
-      desc.textContent = labels[dur.value] || 'å®¸ææé¢?;
+      const labels = { '1':'1\u5C0F\u65F6\u540E\u8FC7\u671F','6':'6\u5C0F\u65F6\u540E\u8FC7\u671F','24':'24\u5C0F\u65F6\u540E\u8FC7\u671F','72':'3\u5929\u540E\u8FC7\u671F','168':'7\u5929\u540E\u8FC7\u671F','720':'30\u5929\u540E\u8FC7\u671F' };
+      desc.textContent = labels[dur.value] || '\u5DF2\u542F\u7528';
     } else {
-      desc.textContent = 'éæ½æ£´';
+      desc.textContent = '\u5173\u95ED';
     }
   } else {
     pwdEnabled = !pwdEnabled;
@@ -424,9 +424,9 @@ function toggleSetting(type) {
     card.classList.toggle('active', pwdEnabled);
     body.classList.toggle('open', pwdEnabled);
     if (pwdEnabled) {
-      desc.textContent = 'å®¸ææé¢?;
+      desc.textContent = '\u5DF2\u542F\u7528';
     } else {
-      desc.textContent = 'éæ½æ£´';
+      desc.textContent = '\u5173\u95ED';
       document.getElementById('pwdInput').value = '';
     }
   }
@@ -435,13 +435,13 @@ function toggleSetting(type) {
 document.getElementById('expireHeader').addEventListener('click', () => toggleSetting('expire'));
 document.getElementById('pwdHeader').addEventListener('click', () => toggleSetting('pwd'));
 
-// éå¤æ¥éç¶ç¬é·å¤å½éæ ¨æ¤éå­æé»å¿å ª
+// \u6709\u6548\u671F\u4E0B\u62C9\u53D8\u5316\u65F6\u66F4\u65B0\u63CF\u8FF0
 document.getElementById('expireDuration').addEventListener('change', function() {
-  const labels = { '1':'1çå¿æ¤éåº¤ç¹é?,'6':'6çå¿æ¤éåº¤ç¹é?,'24':'24çå¿æ¤éåº¤ç¹é?,'72':'3æ¾¶âææ©å¨æ¹¡','168':'7æ¾¶âææ©å¨æ¹¡','720':'30æ¾¶âææ©å¨æ¹¡' };
+  const labels = { '1':'1\u5C0F\u65F6\u540E\u8FC7\u671F','6':'6\u5C0F\u65F6\u540E\u8FC7\u671F','24':'24\u5C0F\u65F6\u540E\u8FC7\u671F','72':'3\u5929\u540E\u8FC7\u671F','168':'7\u5929\u540E\u8FC7\u671F','720':'30\u5929\u540E\u8FC7\u671F' };
   document.getElementById('expireDesc').textContent = labels[this.value];
 });
 
-// --- å¦¯â³ç´¡éå¨å´² ---
+// --- \u6A21\u5F0F\u5207\u6362 ---
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -455,7 +455,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// --- é¥å§å¢æ¶å©ç´¶ ---
+// --- \u56FE\u7247\u4E0A\u4F20 ---
 document.getElementById('uploadArea').addEventListener('click', () => {
   document.getElementById('imageInput').click();
 });
@@ -464,7 +464,7 @@ document.getElementById('imageInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // æ£°å®î
+  // \u9884\u89C8
   const reader = new FileReader();
   reader.onload = (ev) => {
     document.getElementById('previewImg').src = ev.target.result;
@@ -474,7 +474,7 @@ document.getElementById('imageInput').addEventListener('change', async (e) => {
 
   const status = document.getElementById('uploadStatus');
   status.style.display = 'block';
-  status.textContent = 'æ¶å©ç´¶æ¶?..';
+  status.textContent = '\u4E0A\u4F20\u4E2D...';
   status.className = 'status';
 
   const formData = new FormData();
@@ -489,21 +489,21 @@ document.getElementById('imageInput').addEventListener('change', async (e) => {
     const data = await resp.json();
     if (data.success) {
       uploadedImageUrl = data.data.link;
-      status.textContent = 'æ¶å©ç´¶é´æ¬å§';
+      status.textContent = '\u4E0A\u4F20\u6210\u529F';
       status.className = 'status success';
     } else {
-      status.textContent = 'æ¶å©ç´¶æ¾¶è¾«è§¦é? + (data.data?.error || 'éîç¡é¿æ¬î¤');
+      status.textContent = '\u4E0A\u4F20\u5931\u8D25\uFF1A' + (data.data?.error || '\u672A\u77E5\u9519\u8BEF');
       status.className = 'status error';
       uploadedImageUrl = null;
     }
   } catch (err) {
-    status.textContent = 'æ¶å©ç´¶æ¾¶è¾«è§¦éæ°±ç¶ç¼æ»æçî¤ç´çç½å¸ç?;
+    status.textContent = '\u4E0A\u4F20\u5931\u8D25\uFF1A\u7F51\u7EDC\u9519\u8BEF\uFF0C\u8BF7\u91CD\u8BD5';
     status.className = 'status error';
     uploadedImageUrl = null;
   }
 });
 
-// --- é¢ç¶éª 512x512 æ¥æ¨»ç«»æµå²æ·®é®?Canvas ---
+// --- \u751F\u4EA7 512x512 \u9AD8\u6E05\u4E8C\u7EF4\u7801 Canvas ---
 function renderHighResQR(data, size) {
   return new Promise((resolve) => {
     const temp = document.createElement('div');
@@ -520,7 +520,7 @@ function renderHighResQR(data, size) {
       correctLevel: QRCode.CorrectLevel.M
     });
 
-    // ç»å¤ç·å¨åç
+    // \u7B49\u5F85\u6E32\u67D3
     setTimeout(() => {
       const canvas = temp.querySelector('canvas');
       resolve(canvas);
@@ -529,7 +529,7 @@ function renderHighResQR(data, size) {
   });
 }
 
-// --- éå«ç¼ payload ---
+// --- \u6784\u5EFA payload ---
 function buildPayload() {
   const payload = { mode: currentMode };
 
@@ -539,23 +539,23 @@ function buildPayload() {
     payload.content = uploadedImageUrl;
   }
 
-  // éå¤æ¥é?
+  // \u6709\u6548\u671F
   if (expireEnabled) {
     const hours = parseInt(document.getElementById('expireDuration').value);
     payload.expire = Date.now() + hours * 3600 * 1000;
   }
 
-  // çµåç
+  // \u5BC6\u7801
   if (pwdEnabled) {
     const pwd = document.getElementById('pwdInput').value.trim();
-    if (!pwd || pwd.length < 4) return { error: 'çµåçé·å²ç¯ 4 æµ£? };
+    if (!pwd || pwd.length < 4) return { error: '\u5BC6\u7801\u81F3\u5C11 4 \u4F4D' };
     payload.pwd = sha256(pwd);
   }
 
   return payload;
 }
 
-// --- é¢ç¸åæµå²æ·®é®?---
+// --- \u751F\u6210\u4E8C\u7EF4\u7801 ---
 document.getElementById('generateBtn').addEventListener('click', async () => {
   const resultDiv = document.getElementById('qrResult');
   const qrContainer = document.getElementById('qrcode');
@@ -567,18 +567,18 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
   downloadBtn.style.display = 'none';
   expireHint.style.display = 'none';
 
-  // éï¿ çææ³å
+  // \u6821\u9A8C\u8F93\u5165
   if (currentMode === 'text') {
     const text = document.getElementById('textInput').value.trim();
     if (!text) {
       resultDiv.classList.add('show');
-      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">çç¯ç·­éã¦æçæ¥å´ç¹?/span>';
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u8BF7\u8F93\u5165\u6587\u5B57\u5185\u5BB9</span>';
       return;
     }
   } else {
     if (!uploadedImageUrl) {
       resultDiv.classList.add('show');
-      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">çå³°åæ¶å©ç´¶é¥å§å¢</span>';
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u8BF7\u5148\u4E0A\u4F20\u56FE\u7247</span>';
       return;
     }
   }
@@ -590,12 +590,12 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
     return;
   }
 
-  // ç¼æ «ç payload
+  // \u7F16\u7801 payload
   const payloadJson = JSON.stringify(payload);
   const payloadBase64 = btoa(unescape(encodeURIComponent(payloadJson)));
   qrContentString = window.location.origin + window.location.pathname + '#d=' + payloadBase64;
 
-  // å¨åççæ ãæµå²æ·®é®ä¾ç´220pxé?
+  // \u6E32\u67D3\u5C55\u793A\u4E8C\u7EF4\u7801\uFF08220px\uFF09
   try {
     currentQrCode = new QRCode(qrContainer, {
       text: qrContentString,
@@ -607,26 +607,26 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
     });
     resultDiv.classList.add('show');
 
-    // éå¤æ¥éç¸å½ç»?
+    // \u6709\u6548\u671F\u63D0\u793A
     if (payload.expire) {
       const expireDate = new Date(payload.expire);
-      expireHint.textContent = 'éå¤æ¥éç»å¦é? + expireDate.toLocaleString('zh-CN');
+      expireHint.textContent = '\u6709\u6548\u671F\u81F3\uFF1A' + expireDate.toLocaleString('zh-CN');
       expireHint.style.display = 'block';
     }
 
-    // éå§ãæ¶å¬­æµé¸å¤æ³
+    // \u663E\u793A\u4E0B\u8F7D\u6309\u94AE
     downloadBtn.style.display = 'inline-block';
   } catch (err) {
-    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">é¢ç¸åæ¾¶è¾«è§¦é? + err.message + '</span>';
+    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u751F\u6210\u5931\u8D25\uFF1A' + err.message + '</span>';
     resultDiv.classList.add('show');
   }
 });
 
-// --- æ¶å¬­æµæ¥æ¨»ç«»æµå²æ·®é®?---
+// --- \u4E0B\u8F7D\u9AD8\u6E05\u4E8C\u7EF4\u7801 ---
 document.getElementById('downloadBtn').addEventListener('click', async () => {
   if (!qrContentString) return;
   const btn = document.getElementById('downloadBtn');
-  btn.textContent = 'é¢ç¸åæ¶?..';
+  btn.textContent = '\u751F\u6210\u4E2D...';
   btn.disabled = true;
 
   const canvas = await renderHighResQR(qrContentString, 1024);
@@ -639,12 +639,12 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    btn.textContent = 'æ¶å¬­æµæ¥æ¨»ç«»æµå²æ·®é®?(PNG)';
+    btn.textContent = '\u4E0B\u8F7D\u9AD8\u6E05\u4E8C\u7EF4\u7801 (PNG)';
     btn.disabled = false;
   }, 'image/png');
 });
 
-// SHA-256 ç» â¬éæçé?
+// SHA-256 \u7B80\u5355\u5B9E\u73B0
 function sha256(str) {
   function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
   const maxWord = Math.pow(2, 32);
@@ -696,7 +696,7 @@ function sha256(str) {
   return result;
 }
 
-// ============ çæ ãæ¤¤ç¸æ½°é«æç·« ============
+// ============ \u5C55\u793A\u9875\u9762\u903B\u8F91 ============
 (function initViewPage() {
   const hash = window.location.hash;
   if (!hash.startsWith('#d=')) return;
@@ -709,37 +709,37 @@ function sha256(str) {
     const base64 = hash.slice(3);
     payload = JSON.parse(decodeURIComponent(escape(atob(base64))));
   } catch (e) {
-    showViewError('éçåµçï½ç½æ¾¶è¾«è§¦éå±¼ç°©ç¼å¯¸çéîåå®¸åå´¯é§å¿â¬?);
+    showViewError('\u6570\u636E\u89E3\u6790\u5931\u8D25\uFF0C\u4E8C\u7EF4\u7801\u53EF\u80FD\u5DF2\u635F\u574F\u3002');
     return;
   }
 
-  // å¦«â¬éã¦æ§¸éï¸¿ç´¶éã¥çé®ä½¸å¼¬éå¸®ç´æµ åº¡çé®ä½½ç·­éã¥æé²å¶æçºå® æµæ©å¨æ½µé¨å¶ç´
+  // \u68C0\u67E5\u662F\u5426\u4F20\u5165\u5BC6\u7801\u53C2\u6570\uFF08\u4ECE\u5BC6\u7801\u8F93\u5165\u540E\u91CD\u65B0\u8DF3\u8F6C\u8FC7\u6765\u7684\uFF09
   const urlParams = new URLSearchParams(window.location.search);
 
-  // æ¿¡åçéå¤çé®ä½·ç¹é¶ãç¬çæ°­æ¹­æ¥ å²ç
+  // \u5982\u679C\u6709\u5BC6\u7801\u4FDD\u62A4\u4E14\u5C1A\u672A\u9A8C\u8BC1
   if (payload.pwd && !urlParams.get('auth')) {
     showPasswordGate(payload);
     return;
   }
 
-  // æ¥ å²ççµåç
+  // \u9A8C\u8BC1\u5BC6\u7801
   if (payload.pwd && urlParams.get('auth') !== payload.pwd) {
-    showViewError('çµåçæ¥ å²çæ¾¶è¾«è§¦éå²î¬é²å¶æéµî¤çé?);
+    showViewError('\u5BC6\u7801\u9A8C\u8BC1\u5931\u8D25\uFF0C\u8BF7\u91CD\u65B0\u626B\u7801\u3002');
     return;
   }
 
-  // å¦«â¬éã¨ç¹é?
+  // \u68C0\u67E5\u8FC7\u671F
   if (payload.expire && Date.now() > payload.expire) {
     showExpired();
     return;
   }
 
-  // çæ ãéå­î
+  // \u5C55\u793A\u5185\u5BB9
   const card = document.createElement('div');
   card.className = 'view-card';
 
   const h2 = document.createElement('h2');
-  h2.textContent = payload.mode === 'text' ? 'éµî¤çéå­î' : 'éµî¤çé¥å§å¢';
+  h2.textContent = payload.mode === 'text' ? '\u626B\u7801\u5185\u5BB9' : '\u626B\u7801\u56FE\u7247';
   card.appendChild(h2);
 
   const content = document.createElement('div');
@@ -750,10 +750,10 @@ function sha256(str) {
   } else {
     const img = document.createElement('img');
     img.src = payload.content;
-    img.alt = 'é¥å§å¢';
+    img.alt = '\u56FE\u7247';
     img.style.maxWidth = '100%';
     img.style.borderRadius = '8px';
-    img.onerror = () => { content.textContent = 'é¥å§å¢éçºæµæ¾¶è¾«è§¦éå²æ¼éºã¥å½²é³èå¡æ¾¶è¾¨æ¥é?; };
+    img.onerror = () => { content.textContent = '\u56FE\u7247\u52A0\u8F7D\u5931\u8D25\uFF0C\u94FE\u63A5\u53EF\u80FD\u5DF2\u5931\u6548\u3002'; };
     content.style.textAlign = 'center';
     content.appendChild(img);
   }
@@ -762,7 +762,7 @@ function sha256(str) {
 
   const footer = document.createElement('footer');
   footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
-  footer.textContent = '\u00A9 Marvis å®¸ã¥å¿';
+  footer.textContent = '\u00A9 Marvis \u5DE5\u5177';
   card.appendChild(footer);
 
   document.body.appendChild(card);
@@ -773,30 +773,30 @@ function showPasswordGate(payload) {
   card.className = 'view-card';
 
   const h2 = document.createElement('h2');
-  h2.textContent = 'çç¯ç·­éã¨îéî¼çé®?;
+  h2.textContent = '\u8BF7\u8F93\u5165\u8BBF\u95EE\u5BC6\u7801';
   card.appendChild(h2);
 
   const pwdInput = document.createElement('input');
   pwdInput.type = 'password';
-  pwdInput.placeholder = 'ææ³åçµåç';
+  pwdInput.placeholder = '\u8F93\u5165\u5BC6\u7801';
   pwdInput.style.cssText = 'width:100%;max-width:280px;margin:12px auto;display:block;';
   pwdInput.id = 'viewPwdInput';
   card.appendChild(pwdInput);
 
   const btn = document.createElement('button');
-  btn.textContent = 'æ¥ å²ç';
+  btn.textContent = '\u9A8C\u8BC1';
   btn.className = 'generate-btn';
   btn.style.cssText = 'max-width:280px;margin:0 auto;display:block;';
   btn.addEventListener('click', () => {
     const input = document.getElementById('viewPwdInput').value;
     if (sha256(input) === payload.pwd) {
-      // é²å¶æéçºæµç¯?auth éåæ
+      // \u91CD\u65B0\u52A0\u8F7D\u5E26 auth \u53C2\u6570
       const base64 = window.location.hash.slice(3);
       window.location.search = '?auth=' + sha256(input);
     } else {
       const hint = card.querySelector('.pwd-hint') || document.createElement('div');
       hint.className = 'pwd-hint';
-      hint.textContent = 'çµåçé¿æ¬î¤éå²î¬é²å¶ç¯';
+      hint.textContent = '\u5BC6\u7801\u9519\u8BEF\uFF0C\u8BF7\u91CD\u8BD5';
       hint.style.color = '#e74c3c';
       card.appendChild(hint);
     }
@@ -805,11 +805,11 @@ function showPasswordGate(payload) {
 
   const footer = document.createElement('footer');
   footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
-  footer.textContent = '\u00A9 Marvis å®¸ã¥å¿';
+  footer.textContent = '\u00A9 Marvis \u5DE5\u5177';
   card.appendChild(footer);
 
   document.body.appendChild(card);
-  // é·îå§©é±æ°±å
+  // \u81EA\u52A8\u805A\u7126
   setTimeout(() => pwdInput.focus(), 100);
 }
 
@@ -827,12 +827,12 @@ function showExpired() {
   const card = document.createElement('div');
   card.className = 'view-card';
   const h2 = document.createElement('h2');
-  h2.textContent = 'çã¤ç°©ç¼å¯¸çå®¸è¶ç¹é?;
+  h2.textContent = '\u8BE5\u4E8C\u7EF4\u7801\u5DF2\u8FC7\u671F';
   h2.style.color = '#e74c3c';
   card.appendChild(h2);
   const p = document.createElement('p');
   p.style.cssText = 'color:#888;margin-top:12px;';
-  p.textContent = 'çç¯ä»ç»¯è¯²åæµî¥â¬å´å¸éæ®æé´æªç°©ç¼å¯¸çé?;
+  p.textContent = '\u8BF7\u8054\u7CFB\u5206\u4EAB\u8005\u91CD\u65B0\u751F\u6210\u4E8C\u7EF4\u7801\u3002';
   card.appendChild(p);
   document.body.appendChild(card);
 }
