@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>&#x4E8C;&#x7EF4;&#x7801;&#x751F;&#x6210;&#x5668;</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root {
+  --bg: #0d0d1a;
+  --card: #15152a;
+  --border: #2a2a45;
+  --primary: #6c5ce7;
+  --primary-glow: rgba(108,92,231,0.3);
+  --text: #e0e0e0;
+  --muted: #888;
+  --danger: #e74c3c;
+  --success: #2ecc71;
+  --radius: 14px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 16px;
+}
+.container { max-width: 540px; width: 100%; }
+
+/* Header */
+.header { text-align: center; margin-bottom: 28px; }
+.header h1 {
+  font-size: 2em;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a78bfa, #6c5ce7, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+.header .sub { color: var(--muted); font-size: 0.85em; margin-top: 6px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.tab {
+  flex: 1;
+  padding: 11px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 11px;
+  font-size: 0.95em;
+  font-weight: 500;
+  transition: all 0.25s;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-family: inherit;
+}
+.tab.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+/* Card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card label {
+  display: block;
+  font-size: 0.88em;
+  color: #bbb;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+textarea, input[type="text"], input[type="url"], input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0d0d1a;
+  color: var(--text);
+  font-size: 0.95em;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+textarea { min-height: 110px; resize: vertical; }
+textarea:focus, input:focus { outline: none; border-color: var(--primary); }
+input::placeholder, textarea::placeholder { color: #555; }
+
+/* File Upload */
+.file-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #0d0d1a;
+}
+.file-upload-area:hover { border-color: var(--primary); background: #12122a; }
+.file-upload-area .upload-icon { font-size: 2.2em; margin-bottom: 8px; }
+.file-upload-area .hint { color: var(--muted); font-size: 0.82em; margin-top: 6px; }
+.file-upload-area input[type="file"] { display: none; }
+.preview-img {
+  max-width: 220px;
+  max-height: 130px;
+  border-radius: 10px;
+  margin: 12px auto 0;
+  display: block;
+  border: 1px solid var(--border);
+}
+
+/* Settings Cards */
+.settings-section { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.setting-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.setting-card.active { border-color: var(--primary); }
+.setting-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  gap: 14px;
+  transition: background 0.2s;
+}
+.setting-header:hover { background: rgba(108,92,231,0.06); }
+.setting-icon { font-size: 1.5em; flex-shrink: 0; line-height: 1; }
+.setting-info { flex: 1; min-width: 0; }
+.setting-title { font-size: 0.95em; font-weight: 600; color: #ddd; }
+.setting-desc { font-size: 0.78em; color: var(--muted); margin-top: 2px; transition: color 0.3s; }
+.setting-card.active .setting-desc { color: var(--primary); }
+.setting-switch {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  background: #3a3a55;
+  border-radius: 15px;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.setting-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 24px; height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.setting-switch.on { background: var(--primary); }
+.setting-switch.on::after { transform: translateX(22px); }
+.setting-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 20px;
+}
+.setting-body.open { max-height: 80px; padding: 0 20px 16px; }
+.expire-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0d0d1a;
+  color: var(--text);
+  font-size: 0.9em;
+  font-family: inherit;
+  cursor: pointer;
+}
+.expire-select:focus { outline: none; border-color: var(--primary); }
+.setting-body input[type="password"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0d0d1a;
+  color: var(--text);
+  font-size: 0.9em;
+  font-family: inherit;
+}
+.setting-body input[type="password"]:focus { outline: none; border-color: var(--primary); }
+
+/* Generate Btn */
+.generate-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c6ff7, #5b4dcd);
+  color: #fff;
+  font-size: 1.05em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+.generate-btn:hover { background: linear-gradient(135deg, #8b7df8, #6c5ee7); transform: translateY(-1px); box-shadow: 0 8px 25px var(--primary-glow); }
+.generate-btn:active { transform: translateY(0); }
+.generate-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* QR Result */
+.qr-result { text-align: center; margin-top: 24px; display: none; }
+.qr-result.show { display: block; animation: fadeIn 0.4s ease; }
+.qr-result .qr-wrapper {
+  display: inline-block;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(108,92,231,0.25);
+}
+.qr-result .qr-meta { margin-top: 14px; color: var(--muted); font-size: 0.85em; }
+.qr-result .qr-meta span { display: block; margin-top: 4px; }
+.download-btn {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 28px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.92em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.download-btn:hover { background: var(--primary); color: #fff; }
+
+/* Status */
+.status { font-size: 0.84em; margin-top: 8px; }
+.status.success { color: var(--success); }
+.status.error { color: var(--danger); }
+
+footer {
+  text-align: center;
+  color: #444;
+  font-size: 0.78em;
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+/* ========== çæ ãæ¤¤ç¸æ½°éå³°ç´¡ ========== */
+body.view-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.view-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+}
+.view-card h2 { font-size: 1.3em; margin-bottom: 16px; color: #a78bfa; }
+.view-card .content-area {
+  background: #0d0d1a;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.8;
+  max-height: 65vh;
+  overflow-y: auto;
+  font-size: 0.95em;
+}
+.view-card .content-area img { max-width: 100%; border-radius: 8px; }
+.view-card .expired-msg { color: var(--danger); font-size: 1.1em; padding: 30px 0; }
+.view-card .pwd-hint { color: var(--muted); font-size: 0.85em; margin-top: 10px; }
+.view-card footer { margin-top: 18px; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .options-row { flex-direction: column; }
+  .header h1 { font-size: 1.5em; }
+}
+</style>
+</head>
+<body>
+<div class="container" id="generator">
+  <div class="header">
+    <h1>&#x4E8C;&#x7EF4;&#x7801;&#x751F;&#x6210;&#x5668;</h1>
+    <div class="sub">&#x6587;&#x5B57; & &#x56FE;&#x7247; &middot; &#x5BC6;&#x7801;&#x4FDD;&#x62A4; &middot; &#x65F6;&#x6548;&#x63A7;&#x5236;</div>
+  </div>
+
+  <!-- &#x6A21;&#x5F0F;&#x5207;&#x6362; -->
+  <div class="tabs">
+    <button class="tab active" data-mode="text">&#x6587;&#x5B57;</button>
+    <button class="tab" data-mode="image">&#x56FE;&#x7247;</button>
+  </div>
+
+  <!-- &#x6587;&#x5B57;&#x6A21;&#x5F0F; -->
+  <div class="card mode-panel" id="panel-text">
+    <label>&#x8F93;&#x5165;&#x6587;&#x5B57;&#x5185;&#x5BB9;</label>
+    <textarea id="textInput" placeholder="&#x5728;&#x8FD9;&#x91CC;&#x8F93;&#x5165;&#x60A8;&#x8981;&#x5206;&#x4EAB;&#x7684;&#x6587;&#x5B57;&#xFF0C;&#x626B;&#x7801;&#x540E;&#x5C31;&#x80FD;&#x770B;&#x5230;..."></textarea>
+  </div>
+
+  <!-- &#x56FE;&#x7247;&#x6A21;&#x5F0F; -->
+  <div class="card mode-panel" id="panel-image" style="display:none">
+    <label>&#x9009;&#x62E9;&#x56FE;&#x7247;</label>
+    <div class="file-upload-area" id="uploadArea">
+      <div class="upload-icon">&#x1F5BC;</div>
+      <div>&#x70B9;&#x51FB;&#x4E0A;&#x4F20;&#x56FE;&#x7247;</div>
+      <div class="hint">&#x652F;&#x6301; JPG / PNG / GIF / WebP&#xFF0C;&#x6700;&#x5927; 10MB</div>
+      <input type="file" id="imageInput" accept="image/*">
+    </div>
+    <div id="uploadStatus" class="status" style="margin-top:10px;display:none"></div>
+    <img id="previewImg" class="preview-img" style="display:none">
+  </div>
+
+  <!-- &#x53EF;&#x9009;&#x8BBE;&#x7F6E; -->
+  <div class="settings-section">
+    <!-- &#x6709;&#x6548;&#x671F; -->
+    <div class="setting-card" id="expireCard">
+      <div class="setting-header" id="expireHeader">
+        <div class="setting-icon">&#x23F1;</div>
+        <div class="setting-info">
+          <div class="setting-title">&#x6709;&#x6548;&#x671F;</div>
+          <div class="setting-desc" id="expireDesc">&#x5173;&#x95ED;</div>
+        </div>
+        <div class="setting-switch" id="expireSwitch"></div>
+      </div>
+      <div class="setting-body" id="expireBody">
+        <select class="expire-select" id="expireDuration">
+          <option value="1">1 &#x5C0F;&#x65F6;&#x540E;&#x8FC7;&#x671F;</option>
+          <option value="6">6 &#x5C0F;&#x65F6;&#x540E;&#x8FC7;&#x671F;</option>
+          <option value="24" selected>24 &#x5C0F;&#x65F6;&#x540E;&#x8FC7;&#x671F;</option>
+          <option value="72">3 &#x5929;&#x540E;&#x8FC7;&#x671F;</option>
+          <option value="168">7 &#x5929;&#x540E;&#x8FC7;&#x671F;</option>
+          <option value="720">30 &#x5929;&#x540E;&#x8FC7;&#x671F;</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- &#x8BBF;&#x95EE;&#x5BC6;&#x7801; -->
+    <div class="setting-card" id="pwdCard">
+      <div class="setting-header" id="pwdHeader">
+        <div class="setting-icon">&#x1F512;</div>
+        <div class="setting-info">
+          <div class="setting-title">&#x8BBF;&#x95EE;&#x5BC6;&#x7801;</div>
+          <div class="setting-desc" id="pwdDesc">&#x5173;&#x95ED;</div>
+        </div>
+        <div class="setting-switch" id="pwdSwitch"></div>
+      </div>
+      <div class="setting-body" id="pwdBody">
+        <input type="password" id="pwdInput" placeholder="&#x8BBE;&#x7F6E; 4-20 &#x4F4D;&#x5BC6;&#x7801;" maxlength="20">
+      </div>
+    </div>
+  </div>
+
+  <button class="generate-btn" id="generateBtn">&#x751F;&#x6210;&#x4E8C;&#x7EF4;&#x7801;</button>
+
+  <div class="qr-result" id="qrResult">
+    <div class="qr-wrapper">
+      <div id="qrcode"></div>
+    </div>
+    <div id="expireHint" class="status success" style="display:none;margin-top:10px"></div>
+    <button class="download-btn" id="downloadBtn" style="display:none;">&#x4E0B;&#x8F7D;&#x9AD8;&#x6E05;&#x4E8C;&#x7EF4;&#x7801; (PNG)</button>
+  </div>
+
+  <footer>&copy; Marvis &#x5DE5;&#x5177;</footer>
+</div>
+
+<script>
+// ============ é¢ç¸åæ¤¤ç¸æ½°é«æç·« ============
+let currentMode = 'text';
+let currentQrCode = null;
+let uploadedImageUrl = null;
+let qrContentString = ''; // æµå²æ·®é®ä½¸çéå¯ç´ªé®ä½ºæ®çæ¥îæ¶?
+
+// --- çå§çéï¼å¢å¯®â¬é?---
+let expireEnabled = false;
+let pwdEnabled = false;
+
+function toggleSetting(type) {
+  const card = document.getElementById(type + 'Card');
+  const sw = document.getElementById(type + 'Switch');
+  const body = document.getElementById(type + 'Body');
+  const desc = document.getElementById(type + 'Desc');
+  const isOn = type === 'expire' ? expireEnabled : pwdEnabled;
+
+  if (type === 'expire') {
+    expireEnabled = !expireEnabled;
+    sw.classList.toggle('on', expireEnabled);
+    card.classList.toggle('active', expireEnabled);
+    body.classList.toggle('open', expireEnabled);
+    if (expireEnabled) {
+      const dur = document.getElementById('expireDuration');
+      const labels = { '1':'1çå¿æ¤éåº¤ç¹é?,'6':'6çå¿æ¤éåº¤ç¹é?,'24':'24çå¿æ¤éåº¤ç¹é?,'72':'3æ¾¶âææ©å¨æ¹¡','168':'7æ¾¶âææ©å¨æ¹¡','720':'30æ¾¶âææ©å¨æ¹¡' };
+      desc.textContent = labels[dur.value] || 'å®¸ææé¢?;
+    } else {
+      desc.textContent = 'éæ½æ£´';
+    }
+  } else {
+    pwdEnabled = !pwdEnabled;
+    sw.classList.toggle('on', pwdEnabled);
+    card.classList.toggle('active', pwdEnabled);
+    body.classList.toggle('open', pwdEnabled);
+    if (pwdEnabled) {
+      desc.textContent = 'å®¸ææé¢?;
+    } else {
+      desc.textContent = 'éæ½æ£´';
+      document.getElementById('pwdInput').value = '';
+    }
+  }
+}
+
+document.getElementById('expireHeader').addEventListener('click', () => toggleSetting('expire'));
+document.getElementById('pwdHeader').addEventListener('click', () => toggleSetting('pwd'));
+
+// éå¤æ¥éç¶ç¬é·å¤å½éæ ¨æ¤éå­æé»å¿å ª
+document.getElementById('expireDuration').addEventListener('change', function() {
+  const labels = { '1':'1çå¿æ¤éåº¤ç¹é?,'6':'6çå¿æ¤éåº¤ç¹é?,'24':'24çå¿æ¤éåº¤ç¹é?,'72':'3æ¾¶âææ©å¨æ¹¡','168':'7æ¾¶âææ©å¨æ¹¡','720':'30æ¾¶âææ©å¨æ¹¡' };
+  document.getElementById('expireDesc').textContent = labels[this.value];
+});
+
+// --- å¦¯â³ç´¡éå¨å´² ---
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentMode = tab.dataset.mode;
+    document.querySelectorAll('.mode-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('panel-' + currentMode).style.display = '';
+    document.getElementById('qrResult').classList.remove('show');
+    document.getElementById('downloadBtn').style.display = 'none';
+    if (currentQrCode) { currentQrCode.clear(); currentQrCode = null; }
+  });
+});
+
+// --- é¥å§å¢æ¶å©ç´¶ ---
+document.getElementById('uploadArea').addEventListener('click', () => {
+  document.getElementById('imageInput').click();
+});
+
+document.getElementById('imageInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // æ£°å®î
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('previewImg').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+
+  const status = document.getElementById('uploadStatus');
+  status.style.display = 'block';
+  status.textContent = 'æ¶å©ç´¶æ¶?..';
+  status.className = 'status';
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const resp = await fetch('https://api.imgur.com/3/image', {
+      method: 'POST',
+      headers: { 'Authorization': 'Client-ID 546c25a59c58ad7' },
+      body: formData
+    });
+    const data = await resp.json();
+    if (data.success) {
+      uploadedImageUrl = data.data.link;
+      status.textContent = 'æ¶å©ç´¶é´æ¬å§';
+      status.className = 'status success';
+    } else {
+      status.textContent = 'æ¶å©ç´¶æ¾¶è¾«è§¦é? + (data.data?.error || 'éîç¡é¿æ¬î¤');
+      status.className = 'status error';
+      uploadedImageUrl = null;
+    }
+  } catch (err) {
+    status.textContent = 'æ¶å©ç´¶æ¾¶è¾«è§¦éæ°±ç¶ç¼æ»æçî¤ç´çç½å¸ç?;
+    status.className = 'status error';
+    uploadedImageUrl = null;
+  }
+});
+
+// --- é¢ç¶éª 512x512 æ¥æ¨»ç«»æµå²æ·®é®?Canvas ---
+function renderHighResQR(data, size) {
+  return new Promise((resolve) => {
+    const temp = document.createElement('div');
+    temp.style.position = 'absolute';
+    temp.style.left = '-9999px';
+    document.body.appendChild(temp);
+
+    new QRCode(temp, {
+      text: data,
+      width: size,
+      height: size,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    // ç»å¤ç·å¨åç
+    setTimeout(() => {
+      const canvas = temp.querySelector('canvas');
+      resolve(canvas);
+      document.body.removeChild(temp);
+    }, 200);
+  });
+}
+
+// --- éå«ç¼ payload ---
+function buildPayload() {
+  const payload = { mode: currentMode };
+
+  if (currentMode === 'text') {
+    payload.content = document.getElementById('textInput').value.trim();
+  } else {
+    payload.content = uploadedImageUrl;
+  }
+
+  // éå¤æ¥é?
+  if (expireEnabled) {
+    const hours = parseInt(document.getElementById('expireDuration').value);
+    payload.expire = Date.now() + hours * 3600 * 1000;
+  }
+
+  // çµåç
+  if (pwdEnabled) {
+    const pwd = document.getElementById('pwdInput').value.trim();
+    if (!pwd || pwd.length < 4) return { error: 'çµåçé·å²ç¯ 4 æµ£? };
+    payload.pwd = sha256(pwd);
+  }
+
+  return payload;
+}
+
+// --- é¢ç¸åæµå²æ·®é®?---
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const resultDiv = document.getElementById('qrResult');
+  const qrContainer = document.getElementById('qrcode');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const expireHint = document.getElementById('expireHint');
+
+  qrContainer.innerHTML = '';
+  if (currentQrCode) { currentQrCode = null; }
+  downloadBtn.style.display = 'none';
+  expireHint.style.display = 'none';
+
+  // éï¿ çææ³å
+  if (currentMode === 'text') {
+    const text = document.getElementById('textInput').value.trim();
+    if (!text) {
+      resultDiv.classList.add('show');
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">çç¯ç·­éã¦æçæ¥å´ç¹?/span>';
+      return;
+    }
+  } else {
+    if (!uploadedImageUrl) {
+      resultDiv.classList.add('show');
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">çå³°åæ¶å©ç´¶é¥å§å¢</span>';
+      return;
+    }
+  }
+
+  const payload = buildPayload();
+  if (payload.error) {
+    resultDiv.classList.add('show');
+    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">' + payload.error + '</span>';
+    return;
+  }
+
+  // ç¼æ «ç payload
+  const payloadJson = JSON.stringify(payload);
+  const payloadBase64 = btoa(unescape(encodeURIComponent(payloadJson)));
+  qrContentString = window.location.origin + window.location.pathname + '#d=' + payloadBase64;
+
+  // å¨åççæ ãæµå²æ·®é®ä¾ç´220pxé?
+  try {
+    currentQrCode = new QRCode(qrContainer, {
+      text: qrContentString,
+      width: 220,
+      height: 220,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    resultDiv.classList.add('show');
+
+    // éå¤æ¥éç¸å½ç»?
+    if (payload.expire) {
+      const expireDate = new Date(payload.expire);
+      expireHint.textContent = 'éå¤æ¥éç»å¦é? + expireDate.toLocaleString('zh-CN');
+      expireHint.style.display = 'block';
+    }
+
+    // éå§ãæ¶å¬­æµé¸å¤æ³
+    downloadBtn.style.display = 'inline-block';
+  } catch (err) {
+    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">é¢ç¸åæ¾¶è¾«è§¦é? + err.message + '</span>';
+    resultDiv.classList.add('show');
+  }
+});
+
+// --- æ¶å¬­æµæ¥æ¨»ç«»æµå²æ·®é®?---
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+  if (!qrContentString) return;
+  const btn = document.getElementById('downloadBtn');
+  btn.textContent = 'é¢ç¸åæ¶?..';
+  btn.disabled = true;
+
+  const canvas = await renderHighResQR(qrContentString, 1024);
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'qrcode_' + Date.now() + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    btn.textContent = 'æ¶å¬­æµæ¥æ¨»ç«»æµå²æ·®é®?(PNG)';
+    btn.disabled = false;
+  }, 'image/png');
+});
+
+// SHA-256 ç» â¬éæçé?
+function sha256(str) {
+  function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+  const maxWord = Math.pow(2, 32);
+  const lengthProperty = 'length';
+  let i, j;
+  let result = '';
+  const words = [];
+  const asciiBitLength = str[lengthProperty] * 8;
+  let hash = [];
+  const k = [];
+  let primeCounter = 0;
+  const isComposite = {};
+  for (let candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+      hash[primeCounter] = (Math.pow(candidate, 0.5) * maxWord) | 0;
+      k[primeCounter++] = (Math.pow(candidate, 1 / 3) * maxWord) | 0;
+    }
+  }
+  str += '\x80';
+  while (str[lengthProperty] % 64 - 56) str += '\x00';
+  for (i = 0; i < str[lengthProperty]; i++) {
+    j = str.charCodeAt(i);
+    if (j >> 8) return '';
+    words[i >> 2] |= j << ((3 - i) % 4) * 8;
+  }
+  words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
+  words[words[lengthProperty]] = (asciiBitLength);
+  for (j = 0; j < words[lengthProperty];) {
+    const w = words.slice(j, j += 16);
+    const oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (i = 0; i < 64; i++) {
+      const w15 = w[i - 15], w2 = w[i - 2];
+      const a = hash[0], e = hash[4];
+      const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] + (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+      const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+      hash = [(temp1 + temp2) | 0].concat(hash);
+      hash[4] = (hash[4] + temp1) | 0;
+    }
+    for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+  }
+  for (i = 0; i < 8; i++) {
+    for (j = 3; j + 1; j--) {
+      const b = (hash[i] >> (j * 8)) & 255;
+      result += ((b < 16) ? 0 : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+// ============ çæ ãæ¤¤ç¸æ½°é«æç·« ============
+(function initViewPage() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#d=')) return;
+
+  document.body.innerHTML = '';
+  document.body.className = 'view-page';
+
+  let payload;
+  try {
+    const base64 = hash.slice(3);
+    payload = JSON.parse(decodeURIComponent(escape(atob(base64))));
+  } catch (e) {
+    showViewError('éçåµçï½ç½æ¾¶è¾«è§¦éå±¼ç°©ç¼å¯¸çéîåå®¸åå´¯é§å¿â¬?);
+    return;
+  }
+
+  // å¦«â¬éã¦æ§¸éï¸¿ç´¶éã¥çé®ä½¸å¼¬éå¸®ç´æµ åº¡çé®ä½½ç·­éã¥æé²å¶æçºå® æµæ©å¨æ½µé¨å¶ç´
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // æ¿¡åçéå¤çé®ä½·ç¹é¶ãç¬çæ°­æ¹­æ¥ å²ç
+  if (payload.pwd && !urlParams.get('auth')) {
+    showPasswordGate(payload);
+    return;
+  }
+
+  // æ¥ å²ççµåç
+  if (payload.pwd && urlParams.get('auth') !== payload.pwd) {
+    showViewError('çµåçæ¥ å²çæ¾¶è¾«è§¦éå²î¬é²å¶æéµî¤çé?);
+    return;
+  }
+
+  // å¦«â¬éã¨ç¹é?
+  if (payload.expire && Date.now() > payload.expire) {
+    showExpired();
+    return;
+  }
+
+  // çæ ãéå­î
+  const card = document.createElement('div');
+  card.className = 'view-card';
+
+  const h2 = document.createElement('h2');
+  h2.textContent = payload.mode === 'text' ? 'éµî¤çéå­î' : 'éµî¤çé¥å§å¢';
+  card.appendChild(h2);
+
+  const content = document.createElement('div');
+  content.className = 'content-area';
+
+  if (payload.mode === 'text') {
+    content.textContent = payload.content;
+  } else {
+    const img = document.createElement('img');
+    img.src = payload.content;
+    img.alt = 'é¥å§å¢';
+    img.style.maxWidth = '100%';
+    img.style.borderRadius = '8px';
+    img.onerror = () => { content.textContent = 'é¥å§å¢éçºæµæ¾¶è¾«è§¦éå²æ¼éºã¥å½²é³èå¡æ¾¶è¾¨æ¥é?; };
+    content.style.textAlign = 'center';
+    content.appendChild(img);
+  }
+
+  card.appendChild(content);
+
+  const footer = document.createElement('footer');
+  footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
+  footer.textContent = '\u00A9 Marvis å®¸ã¥å¿';
+  card.appendChild(footer);
+
+  document.body.appendChild(card);
+})();
+
+function showPasswordGate(payload) {
+  const card = document.createElement('div');
+  card.className = 'view-card';
+
+  const h2 = document.createElement('h2');
+  h2.textContent = 'çç¯ç·­éã¨îéî¼çé®?;
+  card.appendChild(h2);
+
+  const pwdInput = document.createElement('input');
+  pwdInput.type = 'password';
+  pwdInput.placeholder = 'ææ³åçµåç';
+  pwdInput.style.cssText = 'width:100%;max-width:280px;margin:12px auto;display:block;';
+  pwdInput.id = 'viewPwdInput';
+  card.appendChild(pwdInput);
+
+  const btn = document.createElement('button');
+  btn.textContent = 'æ¥ å²ç';
+  btn.className = 'generate-btn';
+  btn.style.cssText = 'max-width:280px;margin:0 auto;display:block;';
+  btn.addEventListener('click', () => {
+    const input = document.getElementById('viewPwdInput').value;
+    if (sha256(input) === payload.pwd) {
+      // é²å¶æéçºæµç¯?auth éåæ
+      const base64 = window.location.hash.slice(3);
+      window.location.search = '?auth=' + sha256(input);
+    } else {
+      const hint = card.querySelector('.pwd-hint') || document.createElement('div');
+      hint.className = 'pwd-hint';
+      hint.textContent = 'çµåçé¿æ¬î¤éå²î¬é²å¶ç¯';
+      hint.style.color = '#e74c3c';
+      card.appendChild(hint);
+    }
+  });
+  card.appendChild(btn);
+
+  const footer = document.createElement('footer');
+  footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
+  footer.textContent = '\u00A9 Marvis å®¸ã¥å¿';
+  card.appendChild(footer);
+
+  document.body.appendChild(card);
+  // é·îå§©é±æ°±å
+  setTimeout(() => pwdInput.focus(), 100);
+}
+
+function showViewError(msg) {
+  const card = document.createElement('div');
+  card.className = 'view-card';
+  const h2 = document.createElement('h2');
+  h2.textContent = msg;
+  h2.style.color = '#e74c3c';
+  card.appendChild(h2);
+  document.body.appendChild(card);
+}
+
+function showExpired() {
+  const card = document.createElement('div');
+  card.className = 'view-card';
+  const h2 = document.createElement('h2');
+  h2.textContent = 'çã¤ç°©ç¼å¯¸çå®¸è¶ç¹é?;
+  h2.style.color = '#e74c3c';
+  card.appendChild(h2);
+  const p = document.createElement('p');
+  p.style.cssText = 'color:#888;margin-top:12px;';
+  p.textContent = 'çç¯ä»ç»¯è¯²åæµî¥â¬å´å¸éæ®æé´æªç°©ç¼å¯¸çé?;
+  card.appendChild(p);
+  document.body.appendChild(card);
+}
+</script>
+</body>
+</html>
