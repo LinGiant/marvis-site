@@ -219,12 +219,12 @@ async function sha256(str) {
 async function unlock() {
   const input = document.getElementById('passwordInput').value;
   const errorEl = document.getElementById('lockError');
-  if (!input) { errorEl.textContent = 'çç¯ç·­éã¥çé®?; return; }
+  if (!input) { errorEl.textContent = 'Please enter the password'; return; }
   const h = await sha256(input);
   if (h === PASS_HASH) {
     document.getElementById('lockScreen').classList.add('hidden');
   } else {
-    errorEl.textContent = 'çµåçé¿æ¬î¤éå²î¬é²å¶ç¯';
+    errorEl.textContent = 'Wrong password';
     document.getElementById('passwordInput').value = '';
   }
 }
