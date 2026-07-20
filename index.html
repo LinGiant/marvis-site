@@ -262,7 +262,7 @@ footer {
   padding-bottom: 20px;
 }
 
-/* ========== &#x5C55;&#x793A;&#x9875;&#x9762;&#x6837;&#x5F0F; ========== */
+/* ========== 展示页面样式 ========== */
 body.view-page {
   display: flex;
   align-items: center;
@@ -310,19 +310,19 @@ body.view-page {
     <div class="sub">&#x6587;&#x5B57; & &#x56FE;&#x7247; &middot; &#x5BC6;&#x7801;&#x4FDD;&#x62A4; &middot; &#x65F6;&#x6548;&#x63A7;&#x5236;</div>
   </div>
 
-  <!-- &#x6A21;&#x5F0F;&#x5207;&#x6362; -->
+  <!-- 模式切换 -->
   <div class="tabs">
     <button class="tab active" data-mode="text">&#x6587;&#x5B57;</button>
     <button class="tab" data-mode="image">&#x56FE;&#x7247;</button>
   </div>
 
-  <!-- &#x6587;&#x5B57;&#x6A21;&#x5F0F; -->
+  <!-- 文字模式 -->
   <div class="card mode-panel" id="panel-text">
     <label>&#x8F93;&#x5165;&#x6587;&#x5B57;&#x5185;&#x5BB9;</label>
     <textarea id="textInput" placeholder="&#x5728;&#x8FD9;&#x91CC;&#x8F93;&#x5165;&#x60A8;&#x8981;&#x5206;&#x4EAB;&#x7684;&#x6587;&#x5B57;&#xFF0C;&#x626B;&#x7801;&#x540E;&#x5C31;&#x80FD;&#x770B;&#x5230;..."></textarea>
   </div>
 
-  <!-- &#x56FE;&#x7247;&#x6A21;&#x5F0F; -->
+  <!-- 图片模式 -->
   <div class="card mode-panel" id="panel-image" style="display:none">
     <label>&#x9009;&#x62E9;&#x56FE;&#x7247;</label>
     <div class="file-upload-area" id="uploadArea">
@@ -335,9 +335,9 @@ body.view-page {
     <img id="previewImg" class="preview-img" style="display:none">
   </div>
 
-  <!-- &#x53EF;&#x9009;&#x8BBE;&#x7F6E; -->
+  <!-- 可选设置 -->
   <div class="settings-section">
-    <!-- &#x6709;&#x6548;&#x671F; -->
+    <!-- 有效期 -->
     <div class="setting-card" id="expireCard">
       <div class="setting-header" id="expireHeader">
         <div class="setting-icon">&#x23F1;</div>
@@ -359,7 +359,7 @@ body.view-page {
       </div>
     </div>
 
-    <!-- &#x8BBF;&#x95EE;&#x5BC6;&#x7801; -->
+    <!-- 访问密码 -->
     <div class="setting-card" id="pwdCard">
       <div class="setting-header" id="pwdHeader">
         <div class="setting-icon">&#x1F512;</div>
@@ -389,13 +389,13 @@ body.view-page {
 </div>
 
 <script>
-// ============ \u751F\u6210\u9875\u9762\u903B\u8F91 ============
+// ============ 生成页面逻辑 ============
 let currentMode = 'text';
 let currentQrCode = null;
 let uploadedImageUrl = null;
-let qrContentString = ''; // \u4E8C\u7EF4\u7801\u5B9E\u9645\u7F16\u7801\u7684\u5B57\u7B26\u4E32
+let qrContentString = ''; // 二维码实际编码的字符串
 
-// --- \u8BBE\u7F6E\u5361\u7247\u5F00\u5173 ---
+// --- 设置卡片开关 ---
 let expireEnabled = false;
 let pwdEnabled = false;
 
@@ -413,10 +413,10 @@ function toggleSetting(type) {
     body.classList.toggle('open', expireEnabled);
     if (expireEnabled) {
       const dur = document.getElementById('expireDuration');
-      const labels = { '1':'1\u5C0F\u65F6\u540E\u8FC7\u671F','6':'6\u5C0F\u65F6\u540E\u8FC7\u671F','24':'24\u5C0F\u65F6\u540E\u8FC7\u671F','72':'3\u5929\u540E\u8FC7\u671F','168':'7\u5929\u540E\u8FC7\u671F','720':'30\u5929\u540E\u8FC7\u671F' };
-      desc.textContent = labels[dur.value] || '\u5DF2\u542F\u7528';
+      const labels = { '1':'1小时后过期','6':'6小时后过期','24':'24小时后过期','72':'3天后过期','168':'7天后过期','720':'30天后过期' };
+      desc.textContent = labels[dur.value] || '已启用';
     } else {
-      desc.textContent = '\u5173\u95ED';
+      desc.textContent = '关闭';
     }
   } else {
     pwdEnabled = !pwdEnabled;
@@ -424,9 +424,9 @@ function toggleSetting(type) {
     card.classList.toggle('active', pwdEnabled);
     body.classList.toggle('open', pwdEnabled);
     if (pwdEnabled) {
-      desc.textContent = '\u5DF2\u542F\u7528';
+      desc.textContent = '已启用';
     } else {
-      desc.textContent = '\u5173\u95ED';
+      desc.textContent = '关闭';
       document.getElementById('pwdInput').value = '';
     }
   }
@@ -435,13 +435,13 @@ function toggleSetting(type) {
 document.getElementById('expireHeader').addEventListener('click', () => toggleSetting('expire'));
 document.getElementById('pwdHeader').addEventListener('click', () => toggleSetting('pwd'));
 
-// \u6709\u6548\u671F\u4E0B\u62C9\u53D8\u5316\u65F6\u66F4\u65B0\u63CF\u8FF0
+// 有效期下拉变化时更新描述
 document.getElementById('expireDuration').addEventListener('change', function() {
-  const labels = { '1':'1\u5C0F\u65F6\u540E\u8FC7\u671F','6':'6\u5C0F\u65F6\u540E\u8FC7\u671F','24':'24\u5C0F\u65F6\u540E\u8FC7\u671F','72':'3\u5929\u540E\u8FC7\u671F','168':'7\u5929\u540E\u8FC7\u671F','720':'30\u5929\u540E\u8FC7\u671F' };
+  const labels = { '1':'1小时后过期','6':'6小时后过期','24':'24小时后过期','72':'3天后过期','168':'7天后过期','720':'30天后过期' };
   document.getElementById('expireDesc').textContent = labels[this.value];
 });
 
-// --- \u6A21\u5F0F\u5207\u6362 ---
+// --- 模式切换 ---
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -455,7 +455,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// --- \u56FE\u7247\u4E0A\u4F20 ---
+// --- 图片处理（客户端压缩为 base64，不依赖外部图床） ---
 document.getElementById('uploadArea').addEventListener('click', () => {
   document.getElementById('imageInput').click();
 });
@@ -464,46 +464,51 @@ document.getElementById('imageInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // \u9884\u89C8
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    document.getElementById('previewImg').src = ev.target.result;
-    document.getElementById('previewImg').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-
   const status = document.getElementById('uploadStatus');
   status.style.display = 'block';
-  status.textContent = '\u4E0A\u4F20\u4E2D...';
+  status.textContent = '处理中...';
   status.className = 'status';
 
-  const formData = new FormData();
-  formData.append('image', file);
-
   try {
-    const resp = await fetch('https://api.imgur.com/3/image', {
-      method: 'POST',
-      headers: { 'Authorization': 'Client-ID 546c25a59c58ad7' },
-      body: formData
-    });
-    const data = await resp.json();
-    if (data.success) {
-      uploadedImageUrl = data.data.link;
-      status.textContent = '\u4E0A\u4F20\u6210\u529F';
-      status.className = 'status success';
-    } else {
-      status.textContent = '\u4E0A\u4F20\u5931\u8D25\uFF1A' + (data.data?.error || '\u672A\u77E5\u9519\u8BEF');
-      status.className = 'status error';
-      uploadedImageUrl = null;
-    }
+    const dataUrl = await compressImage(file, 200, 0.5);
+    document.getElementById('previewImg').src = dataUrl;
+    document.getElementById('previewImg').style.display = 'block';
+    uploadedImageUrl = dataUrl;
+    const sizeKB = (dataUrl.length / 1024).toFixed(1);
+    status.textContent = '已就绪（' + sizeKB + ' KB）';
+    status.className = 'status success';
   } catch (err) {
-    status.textContent = '\u4E0A\u4F20\u5931\u8D25\uFF1A\u7F51\u7EDC\u9519\u8BEF\uFF0C\u8BF7\u91CD\u8BD5';
+    status.textContent = '处理失败，请重试';
     status.className = 'status error';
     uploadedImageUrl = null;
   }
 });
 
-// --- \u751F\u4EA7 512x512 \u9AD8\u6E05\u4E8C\u7EF4\u7801 Canvas ---
+function compressImage(file, maxSize, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h) { if (w > maxSize) { h = h * maxSize / w; w = maxSize; } }
+        else { if (h > maxSize) { w = w * maxSize / h; h = maxSize; } }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// --- 生产 512x512 高清二维码 Canvas ---
 function renderHighResQR(data, size) {
   return new Promise((resolve) => {
     const temp = document.createElement('div');
@@ -517,10 +522,10 @@ function renderHighResQR(data, size) {
       height: size,
       colorDark: '#000000',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.L
     });
 
-    // \u7B49\u5F85\u6E32\u67D3
+    // 等待渲染
     setTimeout(() => {
       const canvas = temp.querySelector('canvas');
       resolve(canvas);
@@ -529,7 +534,7 @@ function renderHighResQR(data, size) {
   });
 }
 
-// --- \u6784\u5EFA payload ---
+// --- 构建 payload ---
 function buildPayload() {
   const payload = { mode: currentMode };
 
@@ -539,23 +544,23 @@ function buildPayload() {
     payload.content = uploadedImageUrl;
   }
 
-  // \u6709\u6548\u671F
+  // 有效期
   if (expireEnabled) {
     const hours = parseInt(document.getElementById('expireDuration').value);
     payload.expire = Date.now() + hours * 3600 * 1000;
   }
 
-  // \u5BC6\u7801
+  // 密码
   if (pwdEnabled) {
     const pwd = document.getElementById('pwdInput').value.trim();
-    if (!pwd || pwd.length < 4) return { error: '\u5BC6\u7801\u81F3\u5C11 4 \u4F4D' };
+    if (!pwd || pwd.length < 4) return { error: '密码至少 4 位' };
     payload.pwd = sha256(pwd);
   }
 
   return payload;
 }
 
-// --- \u751F\u6210\u4E8C\u7EF4\u7801 ---
+// --- 生成二维码 ---
 document.getElementById('generateBtn').addEventListener('click', async () => {
   const resultDiv = document.getElementById('qrResult');
   const qrContainer = document.getElementById('qrcode');
@@ -567,18 +572,18 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
   downloadBtn.style.display = 'none';
   expireHint.style.display = 'none';
 
-  // \u6821\u9A8C\u8F93\u5165
+  // 校验输入
   if (currentMode === 'text') {
     const text = document.getElementById('textInput').value.trim();
     if (!text) {
       resultDiv.classList.add('show');
-      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u8BF7\u8F93\u5165\u6587\u5B57\u5185\u5BB9</span>';
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">请输入文字内容</span>';
       return;
     }
   } else {
     if (!uploadedImageUrl) {
       resultDiv.classList.add('show');
-      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u8BF7\u5148\u4E0A\u4F20\u56FE\u7247</span>';
+      qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">请先上传图片</span>';
       return;
     }
   }
@@ -590,12 +595,12 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
     return;
   }
 
-  // \u7F16\u7801 payload
+  // 编码 payload
   const payloadJson = JSON.stringify(payload);
   const payloadBase64 = btoa(unescape(encodeURIComponent(payloadJson)));
   qrContentString = window.location.origin + window.location.pathname + '#d=' + payloadBase64;
 
-  // \u6E32\u67D3\u5C55\u793A\u4E8C\u7EF4\u7801\uFF08220px\uFF09
+  // 渲染展示二维码（220px）
   try {
     currentQrCode = new QRCode(qrContainer, {
       text: qrContentString,
@@ -603,30 +608,30 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
       height: 220,
       colorDark: '#000000',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.L
     });
     resultDiv.classList.add('show');
 
-    // \u6709\u6548\u671F\u63D0\u793A
+    // 有效期提示
     if (payload.expire) {
       const expireDate = new Date(payload.expire);
-      expireHint.textContent = '\u6709\u6548\u671F\u81F3\uFF1A' + expireDate.toLocaleString('zh-CN');
+      expireHint.textContent = '有效期至：' + expireDate.toLocaleString('zh-CN');
       expireHint.style.display = 'block';
     }
 
-    // \u663E\u793A\u4E0B\u8F7D\u6309\u94AE
+    // 显示下载按钮
     downloadBtn.style.display = 'inline-block';
   } catch (err) {
-    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u751F\u6210\u5931\u8D25\uFF1A' + err.message + '</span>';
+    qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">生成失败：' + err.message + '</span>';
     resultDiv.classList.add('show');
   }
 });
 
-// --- \u4E0B\u8F7D\u9AD8\u6E05\u4E8C\u7EF4\u7801 ---
+// --- 下载高清二维码 ---
 document.getElementById('downloadBtn').addEventListener('click', async () => {
   if (!qrContentString) return;
   const btn = document.getElementById('downloadBtn');
-  btn.textContent = '\u751F\u6210\u4E2D...';
+  btn.textContent = '生成中...';
   btn.disabled = true;
 
   const canvas = await renderHighResQR(qrContentString, 1024);
@@ -639,12 +644,12 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    btn.textContent = '\u4E0B\u8F7D\u9AD8\u6E05\u4E8C\u7EF4\u7801 (PNG)';
+    btn.textContent = '下载高清二维码 (PNG)';
     btn.disabled = false;
   }, 'image/png');
 });
 
-// SHA-256 \u7B80\u5355\u5B9E\u73B0
+// SHA-256 简单实现
 function sha256(str) {
   function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
   const maxWord = Math.pow(2, 32);
@@ -696,7 +701,7 @@ function sha256(str) {
   return result;
 }
 
-// ============ \u5C55\u793A\u9875\u9762\u903B\u8F91 ============
+// ============ 展示页面逻辑 ============
 (function initViewPage() {
   const hash = window.location.hash;
   if (!hash.startsWith('#d=')) return;
@@ -709,37 +714,37 @@ function sha256(str) {
     const base64 = hash.slice(3);
     payload = JSON.parse(decodeURIComponent(escape(atob(base64))));
   } catch (e) {
-    showViewError('\u6570\u636E\u89E3\u6790\u5931\u8D25\uFF0C\u4E8C\u7EF4\u7801\u53EF\u80FD\u5DF2\u635F\u574F\u3002');
+    showViewError('数据解析失败，二维码可能已损坏。');
     return;
   }
 
-  // \u68C0\u67E5\u662F\u5426\u4F20\u5165\u5BC6\u7801\u53C2\u6570\uFF08\u4ECE\u5BC6\u7801\u8F93\u5165\u540E\u91CD\u65B0\u8DF3\u8F6C\u8FC7\u6765\u7684\uFF09
+  // 检查是否传入密码参数（从密码输入后重新跳转过来的）
   const urlParams = new URLSearchParams(window.location.search);
 
-  // \u5982\u679C\u6709\u5BC6\u7801\u4FDD\u62A4\u4E14\u5C1A\u672A\u9A8C\u8BC1
+  // 如果有密码保护且尚未验证
   if (payload.pwd && !urlParams.get('auth')) {
     showPasswordGate(payload);
     return;
   }
 
-  // \u9A8C\u8BC1\u5BC6\u7801
+  // 验证密码
   if (payload.pwd && urlParams.get('auth') !== payload.pwd) {
-    showViewError('\u5BC6\u7801\u9A8C\u8BC1\u5931\u8D25\uFF0C\u8BF7\u91CD\u65B0\u626B\u7801\u3002');
+    showViewError('密码验证失败，请重新扫码。');
     return;
   }
 
-  // \u68C0\u67E5\u8FC7\u671F
+  // 检查过期
   if (payload.expire && Date.now() > payload.expire) {
     showExpired();
     return;
   }
 
-  // \u5C55\u793A\u5185\u5BB9
+  // 展示内容
   const card = document.createElement('div');
   card.className = 'view-card';
 
   const h2 = document.createElement('h2');
-  h2.textContent = payload.mode === 'text' ? '\u626B\u7801\u5185\u5BB9' : '\u626B\u7801\u56FE\u7247';
+  h2.textContent = payload.mode === 'text' ? '扫码内容' : '扫码图片';
   card.appendChild(h2);
 
   const content = document.createElement('div');
@@ -750,10 +755,10 @@ function sha256(str) {
   } else {
     const img = document.createElement('img');
     img.src = payload.content;
-    img.alt = '\u56FE\u7247';
+    img.alt = '图片';
     img.style.maxWidth = '100%';
     img.style.borderRadius = '8px';
-    img.onerror = () => { content.textContent = '\u56FE\u7247\u52A0\u8F7D\u5931\u8D25\uFF0C\u94FE\u63A5\u53EF\u80FD\u5DF2\u5931\u6548\u3002'; };
+    img.onerror = () => { content.textContent = '图片加载失败，链接可能已失效。'; };
     content.style.textAlign = 'center';
     content.appendChild(img);
   }
@@ -762,7 +767,7 @@ function sha256(str) {
 
   const footer = document.createElement('footer');
   footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
-  footer.textContent = '\u00A9 Marvis \u5DE5\u5177';
+  footer.textContent = '\u00A9 Marvis 工具';
   card.appendChild(footer);
 
   document.body.appendChild(card);
@@ -773,30 +778,30 @@ function showPasswordGate(payload) {
   card.className = 'view-card';
 
   const h2 = document.createElement('h2');
-  h2.textContent = '\u8BF7\u8F93\u5165\u8BBF\u95EE\u5BC6\u7801';
+  h2.textContent = '请输入访问密码';
   card.appendChild(h2);
 
   const pwdInput = document.createElement('input');
   pwdInput.type = 'password';
-  pwdInput.placeholder = '\u8F93\u5165\u5BC6\u7801';
+  pwdInput.placeholder = '输入密码';
   pwdInput.style.cssText = 'width:100%;max-width:280px;margin:12px auto;display:block;';
   pwdInput.id = 'viewPwdInput';
   card.appendChild(pwdInput);
 
   const btn = document.createElement('button');
-  btn.textContent = '\u9A8C\u8BC1';
+  btn.textContent = '验证';
   btn.className = 'generate-btn';
   btn.style.cssText = 'max-width:280px;margin:0 auto;display:block;';
   btn.addEventListener('click', () => {
     const input = document.getElementById('viewPwdInput').value;
     if (sha256(input) === payload.pwd) {
-      // \u91CD\u65B0\u52A0\u8F7D\u5E26 auth \u53C2\u6570
+      // 重新加载带 auth 参数
       const base64 = window.location.hash.slice(3);
       window.location.search = '?auth=' + sha256(input);
     } else {
       const hint = card.querySelector('.pwd-hint') || document.createElement('div');
       hint.className = 'pwd-hint';
-      hint.textContent = '\u5BC6\u7801\u9519\u8BEF\uFF0C\u8BF7\u91CD\u8BD5';
+      hint.textContent = '密码错误，请重试';
       hint.style.color = '#e74c3c';
       card.appendChild(hint);
     }
@@ -805,11 +810,11 @@ function showPasswordGate(payload) {
 
   const footer = document.createElement('footer');
   footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
-  footer.textContent = '\u00A9 Marvis \u5DE5\u5177';
+  footer.textContent = '\u00A9 Marvis 工具';
   card.appendChild(footer);
 
   document.body.appendChild(card);
-  // \u81EA\u52A8\u805A\u7126
+  // 自动聚焦
   setTimeout(() => pwdInput.focus(), 100);
 }
 
@@ -827,12 +832,12 @@ function showExpired() {
   const card = document.createElement('div');
   card.className = 'view-card';
   const h2 = document.createElement('h2');
-  h2.textContent = '\u8BE5\u4E8C\u7EF4\u7801\u5DF2\u8FC7\u671F';
+  h2.textContent = '该二维码已过期';
   h2.style.color = '#e74c3c';
   card.appendChild(h2);
   const p = document.createElement('p');
   p.style.cssText = 'color:#888;margin-top:12px;';
-  p.textContent = '\u8BF7\u8054\u7CFB\u5206\u4EAB\u8005\u91CD\u65B0\u751F\u6210\u4E8C\u7EF4\u7801\u3002';
+  p.textContent = '请联系分享者重新生成二维码。';
   card.appendChild(p);
   document.body.appendChild(card);
 }
