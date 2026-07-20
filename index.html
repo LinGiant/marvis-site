@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码生成器</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0b0b14;
+    color: #d0d5e0;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+  header {
+    text-align: center; padding: 24px 0 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 28px;
+  }
+  header h1 { font-size: 28px; font-weight: 600; color: #fff; }
+  header p { font-size: 13px; color: #6b7d99; margin-top: 6px; }
+
+  .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 4px; margin-bottom: 28px; }
+  .tab {
+    flex: 1; text-align: center; padding: 10px 0;
+    border-radius: 10px; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; color: #6b7d99;
+  }
+  .tab:hover { color: #a0b4d0; }
+  .tab.active { background: rgba(83,127,231,0.2); color: #a0c4ff; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .input-group { margin-bottom: 20px; }
+  .input-group label { display: block; font-size: 12px; color: #6b7d99; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .input-group textarea, .input-group input[type="text"], .input-group input[type="url"] {
+    width: 100%; padding: 14px 18px;
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03); color: #e0e6f0;
+    font-size: 14px; outline: none; transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .input-group textarea { min-height: 100px; resize: vertical; }
+  .input-group textarea:focus, .input-group input:focus { border-color: rgba(83,127,231,0.4); }
+
+  .upload-area {
+    border: 2px dashed rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 40px 20px;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; margin-bottom: 20px;
+  }
+  .upload-area:hover, .upload-area.dragover {
+    border-color: rgba(83,127,231,0.4);
+    background: rgba(83,127,231,0.05);
+  }
+  .upload-icon { font-size: 36px; margin-bottom: 10px; }
+  .upload-text { font-size: 14px; color: #8b9dc3; }
+  .upload-hint { font-size: 11px; color: #4a5568; margin-top: 6px; }
+  .upload-area.has-image { border-color: rgba(34,197,94,0.3); padding: 16px; }
+  .upload-area img.preview { max-width: 100%; max-height: 200px; border-radius: 8px; display: block; margin: 0 auto; }
+
+  .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+  .btn {
+    padding: 12px 32px; border-radius: 24px; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #537fe7, #3b82f6); color: #fff;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+    flex: 1;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: rgba(255,255,255,0.06); color: #8b9dc3;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+  .result-area {
+    margin-top: 24px; padding: 24px;
+    background: rgba(255,255,255,0.025);
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+    display: none;
+  }
+  .result-area.show { display: block; }
+  #qrcode { display: inline-block; padding: 16px; background: #fff; border-radius: 8px; }
+  #qrcode img { display: block; }
+  .result-text { font-size: 12px; color: #5a6a82; margin-top: 12px; word-break: break-all; }
+  .result-hint { font-size: 11px; color: #4a5568; margin-top: 6px; }
+
+  .mode-hint {
+    font-size: 12px; color: #5a6a82;
+    padding: 12px 16px; background: rgba(83,127,231,0.06);
+    border-radius: 8px; margin-bottom: 16px;
+    border-left: 3px solid rgba(83,127,231,0.3);
+  }
+
+  .toast {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    background: #22c55e; color: #000; padding: 12px 28px;
+    border-radius: 24px; font-size: 14px; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 2000;
+  }
+  .toast.show { opacity: 1; }
+  .toast.error { background: #ef4444; color: #fff; }
+
+  .status-text { font-size: 12px; color: #5a6a82; margin-top: 8px; min-height: 18px; }
+
+  footer {
+    text-align: center; padding: 40px 0 16px;
+    font-size: 11px; color: #3a4560;
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="container">
+  <header>
+    <h1>二维码生成器</h1>
+    <p>文本 / 链接 / 图片 → 一键生成可扫码的二维码</p>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="text" onclick="switchTab('text')">文本</div>
+    <div class="tab" data-tab="link" onclick="switchTab('link')">链接</div>
+    <div class="tab" data-tab="image" onclick="switchTab('image')">图片</div>
+  </div>
+
+  <!-- 文本模式 -->
+  <div class="panel active" id="panel-text">
+    <div class="mode-hint">输入任意文字，生成二维码。扫码后直接显示这段文字。</div>
+    <div class="input-group">
+      <label>输入文字内容</label>
+      <textarea id="textInput" placeholder="请输入要转换成二维码的文字内容..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="generateTextQR()">生成二维码</button>
+    <div class="result-area" id="result-text">
+      <div id="qrcode-text"></div>
+      <div class="result-text" id="resultTextContent"></div>
+      <div class="result-hint">使用微信/支付宝扫码即可查看内容</div>
+    </div>
+  </div>
+
+  <!-- 链接模式 -->
+  <div class="panel" id="panel-link">
+    <div class="mode-hint">输入网址链接，生成二维码。扫码后自动跳转到该链接。</div>
+    <div class="input-group">
+      <label>输入网址链接</label>
+      <input type="url" id="linkInput" placeholder="https://example.com">
+    </div>
+    <button class="btn btn-primary" onclick="generateLinkQR()">生成二维码</button>
+    <div class="result-area" id="result-link">
+      <div id="qrcode-link"></div>
+      <div class="result-text" id="resultLinkContent"></div>
+      <div class="result-hint">使用微信/支付宝扫码即可跳转</div>
+    </div>
+  </div>
+
+  <!-- 图片模式 -->
+  <div class="panel" id="panel-image">
+    <div class="mode-hint">上传图片，生成二维码。扫码后打开页面展示这张图片。</div>
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon" id="uploadIcon">&#128247;</div>
+      <div class="upload-text" id="uploadText">点击上传图片</div>
+      <div class="upload-hint">支持 JPG / PNG / GIF，建议小于 5MB</div>
+      <img class="preview" id="preview" style="display:none">
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+    <div id="imageStatus" class="status-text"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" id="generateImageBtn" onclick="generateImageQR()" disabled>生成二维码</button>
+    </div>
+    <div class="result-area" id="result-image">
+      <div id="qrcode-image"></div>
+      <div class="result-text" id="resultImageContent"></div>
+      <div class="result-hint">扫码后打开图片展示页面</div>
+    </div>
+  </div>
+
+  <footer>由 Marvis 生成</footer>
+</div>
+
+<script>
+let currentImageDataURL = null;
+let imgurLink = null;
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
+  document.getElementById(`panel-${name}`).classList.add('active');
+  // 隐藏所有结果
+  document.querySelectorAll('.result-area').forEach(r => r.classList.remove('show'));
+}
+
+function clearQR(containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+}
+
+function generateQR(containerId, content, resultElId, displayContent) {
+  clearQR(containerId);
+  const container = document.getElementById(containerId);
+  // 二维码尺寸自适应
+  const size = Math.min(280, window.innerWidth - 80);
+  new QRCode(container, {
+    text: content,
+    width: size,
+    height: size,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  const resultArea = container.closest('.result-area');
+  resultArea.classList.add('show');
+  const displayEl = document.getElementById(resultElId);
+  if (displayEl) {
+    displayEl.textContent = displayContent || content;
+  }
+}
+
+function generateTextQR() {
+  const text = document.getElementById('textInput').value.trim();
+  if (!text) { showToast('请输入文字内容', true); return; }
+  generateQR('qrcode-text', text, 'resultTextContent', text.length > 60 ? text.substring(0, 60) + '...' : text);
+}
+
+function generateLinkQR() {
+  let link = document.getElementById('linkInput').value.trim();
+  if (!link) { showToast('请输入链接', true); return; }
+  if (!link.startsWith('http://') && !link.startsWith('https://')) {
+    link = 'https://' + link;
+  }
+  generateQR('qrcode-link', link, 'resultLinkContent', link);
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentImageDataURL = e.target.result;
+    const preview = document.getElementById('preview');
+    preview.src = currentImageDataURL;
+    preview.style.display = 'block';
+    document.getElementById('uploadIcon').style.display = 'none';
+    document.getElementById('uploadText').textContent = file.name + ' (' + (file.size/1024).toFixed(1) + 'KB)';
+    document.getElementById('uploadArea').classList.add('has-image');
+    document.getElementById('imageStatus').textContent = '图片已上传，正在获取公开链接...';
+    document.getElementById('generateImageBtn').disabled = true;
+
+    // 上传到 Imgur 获取公开链接
+    uploadToImgur(file);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadToImgur(file) {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const resp = await fetch('https://api.imgur.com/3/image', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Client-ID 9e57cb1c4b5c0e8'
+      },
+      body: formData
+    });
+    const data = await resp.json();
+    if (data.success) {
+      imgurLink = data.data.link;
+      document.getElementById('imageStatus').textContent = '上传成功 ✓ 可生成二维码';
+      document.getElementById('imageStatus').style.color = '#4ade80';
+      document.getElementById('generateImageBtn').disabled = false;
+    } else {
+      throw new Error(data.data?.error || '上传失败');
+    }
+  } catch (err) {
+    console.error('Imgur upload failed:', err);
+    // 降级方案：使用 data URL 直接生成
+    imgurLink = currentImageDataURL;
+    document.getElementById('imageStatus').textContent = '⚠️ 图床上传失败，已切换为内嵌模式（扫码可能不兼容）';
+    document.getElementById('imageStatus').style.color = '#fbbf24';
+    document.getElementById('generateImageBtn').disabled = false;
+  }
+}
+
+function generateImageQR() {
+  if (!imgurLink) { showToast('请先上传图片', true); return; }
+  generateQR('qrcode-image', imgurLink, 'resultImageContent',
+    imgurLink.startsWith('data:') ? '[图片内嵌模式] 部分扫码器可能不支持' : '扫码查看图片');
+}
+</script>
+</body>
+</html>
