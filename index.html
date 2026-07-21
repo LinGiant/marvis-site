@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="zh-CN">
 
@@ -1231,25 +1231,15 @@ document.getElementById('contentItemsContainer').addEventListener('change', asyn
     const sizeMB = (dataSize / (1024 * 1024)).toFixed(1);
     item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB';
 
+    // 加载精确尺寸
     const img = new Image();
-
     const finalSizeMB = sizeMB;
-
-    const finalSuffix = suffix;
-
     img.onload = () => {
-
-      item.imageInfo = img.width + '\u00d7' + img.height + ' \u00b7 ' + finalSizeMB + ' MB' + finalSuffix;
-
+      item.imageInfo = img.width + '\u00d7' + img.height + ' \u00b7 ' + finalSizeMB + ' MB';
       const infoDiv = document.getElementById('imgInfo-' + item.id);
-
       if (infoDiv) infoDiv.textContent = item.imageInfo;
-
     };
-
     img.src = item.previewUrl;
-
-
 
     renderContentItem(item);
 
