@@ -1172,6 +1172,78 @@ document.getElementById('contentItemsContainer').addEventListener('input', funct
 
 
 
+async function compressImage(arrayBuffer, mimeType) {
+
+  const blob = new Blob([arrayBuffer], { type: mimeType });
+
+  const img = new Image();
+
+  img.src = URL.createObjectURL(blob);
+
+  await new Promise((resolve, reject) => {
+
+    img.onload = resolve;
+
+    img.onerror = () => reject(new Error('Image decode failed'));
+
+  });
+
+
+
+  const MAX_WIDTH = 1920;
+
+  let width = img.width;
+
+  let height = img.height;
+
+  if (width > MAX_WIDTH) {
+
+    height = Math.round(height * (MAX_WIDTH / width));
+
+    width = MAX_WIDTH;
+
+  }
+
+
+
+  const canvas = document.createElement('canvas');
+
+  canvas.width = width;
+
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+
+  ctx.drawImage(img, 0, 0, width, height);
+
+  URL.revokeObjectURL(img.src);
+
+
+
+  const qualities = [0.85, 0.7, 0.5];
+
+  let resultBlob;
+
+  for (const q of qualities) {
+
+    resultBlob = await new Promise(resolve => {
+
+      canvas.toBlob(resolve, 'image/jpeg', q);
+
+    });
+
+    if (resultBlob.size <= 2 * 1024 * 1024) break;
+
+  }
+
+
+
+  return await resultBlob.arrayBuffer();
+
+}
+
+
+
 document.getElementById('contentItemsContainer').addEventListener('change', async function(e) {
 
   const target = e.target.closest('[data-action="uploadImage"]');
@@ -1224,9 +1296,43 @@ document.getElementById('contentItemsContainer').addEventListener('change', asyn
 
 
 
-    const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    // 图片压缩（超过 2MB 时触发）
 
-    item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB';
+    let compressed = false;
+
+    if (file.size > 2 * 1024 * 1024) {
+
+      const infoDiv = document.getElementById('imgInfo-' + item.id);
+
+      if (infoDiv) infoDiv.textContent = '正在压缩图片...';
+
+
+
+      try {
+
+        const compressedData = await compressImage(arrayBuffer, file.type);
+
+        item.imageData = compressedData;
+
+        compressed = true;
+
+      } catch (e) {
+
+        // 压缩失败则保留原始数据
+
+      }
+
+    }
+
+
+
+    const dataSize = item.imageData.byteLength;
+
+    const sizeMB = (dataSize / (1024 * 1024)).toFixed(1);
+
+    const suffix = compressed ? ' (\u5df2\u538b\u7f29)' : '';
+
+    item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB' + suffix;
 
 
 
@@ -1234,9 +1340,13 @@ document.getElementById('contentItemsContainer').addEventListener('change', asyn
 
     const img = new Image();
 
+    const finalSizeMB = sizeMB;
+
+    const finalSuffix = suffix;
+
     img.onload = () => {
 
-      item.imageInfo = img.width + '\u00d7' + img.height + ' \u00b7 ' + sizeMB + ' MB';
+      item.imageInfo = img.width + '\u00d7' + img.height + ' \u00b7 ' + finalSizeMB + ' MB' + finalSuffix;
 
       const infoDiv = document.getElementById('imgInfo-' + item.id);
 
