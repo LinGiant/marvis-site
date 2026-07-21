@@ -44,9 +44,79 @@ body {
 }
 .header .sub { color: var(--muted); font-size: 0.85em; margin-top: 6px; }
 
+/* GitHub Settings */
+.gh-settings {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.gh-settings-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  cursor: pointer;
+  user-select: none;
+  gap: 10px;
+  transition: background 0.2s;
+  font-size: 0.9em;
+  color: #bbb;
+}
+.gh-settings-header:hover { background: rgba(108,92,231,0.06); }
+.gh-settings-header .arrow {
+  transition: transform 0.3s;
+  font-size: 0.7em;
+  color: var(--muted);
+}
+.gh-settings.open .gh-settings-header .arrow { transform: rotate(90deg); }
+.gh-settings-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 18px;
+}
+.gh-settings.open .gh-settings-body { max-height: 200px; padding: 0 18px 16px; }
+.gh-settings-body .gh-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.gh-settings-body input[type="text"],
+.gh-settings-body input[type="password"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0d0d1a;
+  color: var(--text);
+  font-size: 0.88em;
+  font-family: inherit;
+}
+.gh-settings-body input:focus { outline: none; border-color: var(--primary); }
+.gh-save-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.88em;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.gh-save-btn:hover { background: var(--primary); color: #fff; }
+.gh-save-btn.saved { border-color: var(--success); color: var(--success); }
+.gh-save-btn.saved:hover { background: var(--success); color: #fff; }
+.gh-help {
+  font-size: 0.76em;
+  color: #555;
+  line-height: 1.6;
+}
 
-
-/ ========== &#x6807;&#x9898;&#x533a; ========== /
+/* ========== 标题区 ========== */
 .title-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -492,6 +562,23 @@ body.view-page {
     <div class="sub">&#x591a;&#x5185;&#x5bb9; &middot; &#x72ec;&#x7acb;&#x5bc6;&#x7801; &middot; &#x65f6;&#x6548;&#x63a7;&#x5236;</div>
   </div>
 
+  <!-- GitHub &#x8bbe;&#x7f6e; -->
+  <div class="gh-settings" id="ghSettings">
+    <div class="gh-settings-header" id="ghSettingsHeader">
+      <span class="arrow">&#9654;</span>
+      <span>&#9881; &#x8bbe;&#x7f6e;</span>
+    </div>
+    <div class="gh-settings-body">
+      <div class="gh-row">
+        <input type="password" id="ghTokenInput" placeholder="GitHub &#x8bbf;&#x95ee;&#x4ee4;&#x724c;&#xff08;&#x5df2;&#x5185;&#x7f6e;&#xff0c;&#x53ef;&#x4e0d;&#x586b;&#xff09;" maxlength="200">
+        <button class="gh-save-btn" id="ghSaveBtn">&#x4fdd;&#x5b58;</button>
+      </div>
+      <div class="gh-help">
+        &#x4ee4;&#x724c;&#x5df2;&#x5185;&#x7f6e;&#xff0c;&#x65e0;&#x9700;&#x586b;&#x5199;&#x3002;&#x5982;&#x9700;&#x66f4;&#x6362;&#x4ee4;&#x724c;&#xff0c;&#x5728; GitHub &#x2192; Settings &#x2192; Developer settings &#x2192; Personal access tokens &#x521b;&#x5efa;&#xff0c;&#x4ec5;&#x52fe;&#x9009; LinGiant/marvis-site &#x4ed3;&#x5e93;&#x7684; Contents &#x8bfb;&#x5199;&#x6743;&#x9650;&#x3002;
+      </div>
+    </div>
+  </div>
+
   <!-- &#x6807;&#x9898;&#x533a; -->
   <div class="title-card">
     <label>&#x4e8c;&#x7ef4;&#x7801;&#x6807;&#x9898;&#xff08;&#x9009;&#x586b;&#xff09;</label>
@@ -558,8 +645,7 @@ const GITHUB_TOKEN = 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
 
 // ============ GitHub \u4e0a\u4f20 ============
 async function uploadToGitHub(filename, uint8Array) {
-  const token = GITHUB_TOKEN;
-  if (!token) return { ok: false, msg: '\u4ee4\u724c\u672a\u914d\u7f6e' };
+  const token = localStorage.getItem('gh_token') || GITHUB_TOKEN;
 
   const base64 = btoa(String.fromCharCode(...uint8Array));
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
@@ -1298,7 +1384,37 @@ function showExpired() {
   document.body.appendChild(card);
 }
 
+// ============ GitHub \u8bbe\u7f6e\u9762\u677f ============
+function initGhSettings() {
+  const settings = document.getElementById('ghSettings');
+  const header = document.getElementById('ghSettingsHeader');
+  const input = document.getElementById('ghTokenInput');
+  const saveBtn = document.getElementById('ghSaveBtn');
+
+  header.addEventListener('click', () => settings.classList.toggle('open'));
+
+  // Restore saved token
+  const saved = localStorage.getItem('gh_token');
+  if (saved) input.value = saved;
+
+  saveBtn.addEventListener('click', () => {
+    const val = input.value.trim();
+    if (val) {
+      localStorage.setItem('gh_token', val);
+      saveBtn.textContent = '\u2714 \u5df2\u4fdd\u5b58';
+      saveBtn.classList.add('saved');
+      setTimeout(() => { saveBtn.textContent = '\u4fdd\u5b58'; saveBtn.classList.remove('saved'); }, 2000);
+    } else {
+      localStorage.removeItem('gh_token');
+      saveBtn.textContent = '\u2714 \u5df2\u6e05\u9664';
+      saveBtn.classList.add('saved');
+      setTimeout(() => { saveBtn.textContent = '\u4fdd\u5b58'; saveBtn.classList.remove('saved'); }, 2000);
+    }
+  });
+}
+
 // ============ \u521d\u59cb\u5316\uff1a\u9ed8\u8ba4\u6dfb\u52a0\u4e00\u4e2a\u5185\u5bb9\u9879 ============
+initGhSettings();
 addContentItem();
 </script>
 </body>
