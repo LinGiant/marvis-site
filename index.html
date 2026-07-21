@@ -1012,7 +1012,13 @@ function renderContentItem(item) {
 
     '<div class="password-row" id="pwdRow-' + item.id + '" style="display:' + (item.encryptionEnabled ? 'flex' : 'none') + '">' +
 
-      '<input type="password" placeholder="\u8bbe\u7f6e\u5bc6\u7801\uff08\u81f3\u5c114\u4f4d\uff09" maxlength="50" data-action="updatePassword" data-id="' + item.id + '" value="' + escapeHtml(item.password) + '">' +
+      '<div style="display:flex;gap:0;flex:1;">' +
+
+        '<input type="password" placeholder="\u8bbe\u7f6e\u5bc6\u7801\uff08\u81f3\u5c114\u4f4d\uff09" maxlength="50" data-action="updatePassword" data-id="' + item.id + '" value="' + escapeHtml(item.password) + '" style="flex:1;border-radius:6px 0 0 6px;">' +
+
+        '<button class="pwd-toggle-btn" data-action="togglePwdVisibility" data-id="' + item.id + '" title="\u663e\u793a/\u9690\u85cf\u5bc6\u7801" style="padding:10px 12px;border:1px solid var(--border);border-left:none;border-radius:0 6px 6px 0;background:transparent;color:var(--muted);cursor:pointer;font-size:0.85em;">\ud83d\udc41</button>' +
+
+      '</div>' +
 
       '<button class="random-pwd-btn" data-action="randomPassword" data-id="' + item.id + '">\u1f3b2 \u968f\u673a\u751f\u6210</button>' +
 
@@ -1094,6 +1100,22 @@ document.getElementById('contentItemsContainer').addEventListener('click', funct
 
       rebindItemEvents(item);
 
+      break;
+
+        case 'togglePwdVisibility':
+      {
+        const input = document.querySelector('input[data-id="' + id + '"][data-action="updatePassword"]');
+        if (input) {
+          const btn = document.querySelector('button[data-action="togglePwdVisibility"][data-id="' + id + '"]');
+          if (input.type === 'password') {
+            input.type = 'text';
+            if (btn) btn.textContent = '\ud83d\udc40';
+          } else {
+            input.type = 'password';
+            if (btn) btn.textContent = '\ud83d\udc41';
+          }
+        }
+      }
       break;
 
     case 'randomPassword':
@@ -1794,6 +1816,18 @@ function renderHighResQR(data, size) {
 
       } else if (item.mode === 'image' && item.file) {
 
+        const wrapper = document.createElement('div');
+
+        wrapper.style.cssText = 'position:relative;min-height:60px;';
+
+        const loadingHint = document.createElement('div');
+
+        loadingHint.textContent = '\u56fe\u7247\u52a0\u8f7d\u4e2d...';
+
+        loadingHint.style.cssText = 'color:var(--muted);font-size:0.85em;text-align:center;padding:20px;';
+
+        wrapper.appendChild(loadingHint);
+
         const img = document.createElement('img');
 
         img.src = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
@@ -1804,9 +1838,15 @@ function renderHighResQR(data, size) {
 
         img.style.borderRadius = '8px';
 
-        img.onerror = function() { this.alt = '\u56fe\u7247\u52a0\u8f7d\u5931\u8d25'; this.style.display = 'none'; };
+        img.style.display = 'none';
 
-        section.appendChild(img);
+        img.onload = function() { loadingHint.style.display = 'none'; img.style.display = ''; };
+
+        img.onerror = function() { loadingHint.textContent = '\u56fe\u7247\u52a0\u8f7d\u5931\u8d25'; loadingHint.style.color = '#e74c3c'; };
+
+        wrapper.appendChild(img);
+
+        section.appendChild(wrapper);
 
       }
 
@@ -1898,9 +1938,9 @@ function renderHighResQR(data, size) {
 
       btn.disabled = true;
 
-      btn.textContent = '\u89e3\u5bc6\u4e2d...';
+      btn.textContent = '解密中...';
 
-      hint.textContent = '\u6b63\u5728\u5c1d\u8bd5\u89e3\u5bc6...';
+      hint.textContent = '正在下载文件...';
 
       hint.style.color = 'var(--muted)';
 
@@ -1916,13 +1956,15 @@ function renderHighResQR(data, size) {
 
           const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
 
-          // 分块下载 + 进度显示 + 超时控制
+          // 分块下载 + 进度显示 + 超时控制（带回退）
 
           const controller = new AbortController();
 
           const timeoutId = setTimeout(() => controller.abort(), 60000);
 
           let buffer;
+
+          let downloadOk = false;
 
           try {
 
@@ -1932,51 +1974,79 @@ function renderHighResQR(data, size) {
 
             if (!resp.ok) continue;
 
-            const contentLength = +resp.headers.get('Content-Length') || 0;
+            // 尝试流式分块读取（支持进度显示）
 
-            const reader = resp.body.getReader();
+            if (resp.body && typeof resp.body.getReader === 'function') {
 
-            const chunks = [];
+              try {
 
-            let received = 0;
+                const contentLength = +resp.headers.get('Content-Length') || 0;
 
-            while (true) {
+                const reader = resp.body.getReader();
 
-              const { done, value } = await reader.read();
+                const chunks = [];
 
-              if (done) break;
+                let received = 0;
 
-              chunks.push(value);
+                while (true) {
 
-              received += value.length;
+                  const { done, value } = await reader.read();
 
-              if (contentLength > 0) {
+                  if (done) break;
 
-                const pct = Math.round((received / contentLength) * 100);
+                  chunks.push(value);
 
-                hint.textContent = '正在下载文件... ' + pct + '%';
+                  received += value.length;
 
-              } else {
+                  if (contentLength > 0) {
 
-                hint.textContent = '正在下载文件... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+                    const pct = Math.round((received / contentLength) * 100);
+
+                    hint.textContent = '正在下载文件... ' + pct + '%';
+
+                  } else {
+
+                    hint.textContent = '正在下载文件... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+
+                  }
+
+                }
+
+                // 合并所有分块
+
+                const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
+
+                buffer = new Uint8Array(totalLength);
+
+                let offset = 0;
+
+                for (const chunk of chunks) {
+
+                  buffer.set(chunk, offset);
+
+                  offset += chunk.length;
+
+                }
+
+                downloadOk = true;
+
+              } catch (streamErr) {
+
+                // 流式读取失败，回退到 arrayBuffer
 
               }
 
             }
 
-            // 合并所有分块
+            // 回退：全量 arrayBuffer（无进度显示但可靠）
 
-            const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
+            if (!downloadOk) {
 
-            buffer = new Uint8Array(totalLength);
+              hint.textContent = '正在下载文件...';
 
-            let offset = 0;
+              buffer = new Uint8Array(await resp.arrayBuffer());
 
-            for (const chunk of chunks) {
-
-              buffer.set(chunk, offset);
-
-              offset += chunk.length;
+              downloadOk = true;
 
             }
 
@@ -1990,13 +2060,23 @@ function renderHighResQR(data, size) {
 
               hint.style.color = '#e74c3c';
 
+            } else {
+
+              hint.textContent = '下载失败，请重试';
+
+              hint.style.color = '#e74c3c';
+
             }
 
             continue;
 
           }
 
+          if (!downloadOk) continue;
+
           hint.textContent = '正在解密文件...';
+
+          hint.style.color = 'var(--muted)';
 
           const decrypted = await decryptImage(password, buffer);
 
