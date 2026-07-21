@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 
 <style>
-/* ===== Retro Premium �� ���ż�Լ�߶� ===== */
+/* ===== Retro Premium â å¤å¤ç®çº¦é«ç«¯ ===== */
 :root {
   --bg: #f3ede4;
   --card: #eae2d5;
@@ -359,7 +359,7 @@ body {
 .upload-detail-row .u-name { flex: 1; word-break: break-all; color: #6b4d35; }
 .upload-detail-row .u-msg { font-size: 0.9em; }
 
-/* ===== View Page (ɨ��չʾҳ) ===== */
+/* ===== View Page (æ«ç å±ç¤ºé¡µ) ===== */
 body.view-page {
   display: flex; align-items: center; justify-content: center;
   padding: 40px 16px;
@@ -602,11 +602,11 @@ const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
 
 
 
-// ============ GitHub �ϴ� ============
+// ============ GitHub ä¸ä¼  ============
 
 function base64Encode(uint8Array) {
   return new Promise((resolve) => {
-    const batchSize = 65536; // Safe chunk size
+    const batchSize = 65535; // Safe chunk size
     let result = '';
     let offset = 0;
     function processBatch() {
@@ -699,7 +699,7 @@ async function uploadToGitHub(filename, uint8Array, onProgress) {
 
     };
 
-    xhr.onerror = () => resolve({ ok: false, msg: '�������', filename });
+    xhr.onerror = () => resolve({ ok: false, msg: 'ç½ç»éè¯¯', filename });
 
     xhr.send(bodyStr);
 
@@ -1272,7 +1272,7 @@ document.getElementById('contentItemsContainer').addEventListener('change', asyn
     const sizeMB = (dataSize / (1024 * 1024)).toFixed(1);
     item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB';
 
-    // ���ؾ�ȷ�ߴ�
+    // å è½½ç²¾ç¡®å°ºå¯¸
     const img = new Image();
     const finalSizeMB = sizeMB;
     img.onload = () => {
@@ -1594,11 +1594,11 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 
           if (phase === 'encoding') {
 
-            row.querySelector('.u-msg').textContent = '���ڱ���...';
+            row.querySelector('.u-msg').textContent = 'æ­£å¨ç¼ç ...';
 
           } else {
 
-            row.querySelector('.u-msg').textContent = '�ϴ��� ' + pct + '%';
+            row.querySelector('.u-msg').textContent = 'ä¸ä¼ ä¸­ ' + pct + '%';
 
           }
 
@@ -1888,7 +1888,7 @@ function renderHighResQR(data, size) {
 
         section.appendChild(wrapper);
 
-        // �첽 fetch ���� + �ֿ���� + ��ʱ����
+        // å¼æ­¥ fetch ä¸è½½ + ååè¿åº¦ + è¶æ¶æ§å¶
 
         (async () => {
 
@@ -1908,7 +1908,7 @@ function renderHighResQR(data, size) {
 
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
-            // ������ʽ�ֿ��ȡ��֧�ֽ�����ʾ��
+            // å°è¯æµå¼ååè¯»åï¼æ¯æè¿åº¦æ¾ç¤ºï¼
 
             if (resp.body && typeof resp.body.getReader === 'function') {
 
@@ -1950,7 +1950,7 @@ function renderHighResQR(data, size) {
 
               } catch (streamErr) {
 
-                // ��ʽ��ȡʧ�ܣ����������ȡ�����ļ�
+                // æµå¼è¯»åå¤±è´¥ï¼éæ°è¯·æ±è·åå®æ´æä»¶
                 loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
                 const resp2 = await fetch(fileUrl);
                 if (!resp2.ok) throw new Error('HTTP ' + resp2.status);
@@ -1960,7 +1960,7 @@ function renderHighResQR(data, size) {
 
             } else {
 
-              // �������֧�� ReadableStream��ֱ���� blob()
+              // æµè§å¨ä¸æ¯æ ReadableStreamï¼ç´æ¥ç¨ blob()
               blob = await resp.blob();
 
             }
@@ -2083,9 +2083,9 @@ function renderHighResQR(data, size) {
 
       btn.disabled = true;
 
-      btn.textContent = '������...';
+      btn.textContent = 'è§£å¯ä¸­...';
 
-      hint.textContent = '���������ļ�...';
+      hint.textContent = 'æ­£å¨ä¸è½½æä»¶...';
 
       hint.style.color = 'var(--muted)';
 
@@ -2101,7 +2101,7 @@ function renderHighResQR(data, size) {
 
           const fileUrl = 'https://jolly-voice-78ed.2417611398.workers.dev/LinGiant/marvis-site/main/images/' + item.file;
 
-          // �ֿ����� + ������ʾ + ��ʱ���ƣ������ˣ�
+          // ååä¸è½½ + è¿åº¦æ¾ç¤º + è¶æ¶æ§å¶ï¼å¸¦åéï¼
 
           const controller = new AbortController();
 
@@ -2119,7 +2119,7 @@ function renderHighResQR(data, size) {
 
             if (!resp.ok) continue;
 
-            // ������ʽ�ֿ��ȡ��֧�ֽ�����ʾ��
+            // å°è¯æµå¼ååè¯»åï¼æ¯æè¿åº¦æ¾ç¤ºï¼
 
             if (resp.body && typeof resp.body.getReader === 'function') {
 
@@ -2147,17 +2147,17 @@ function renderHighResQR(data, size) {
 
                     const pct = Math.round((received / contentLength) * 100);
 
-                    hint.textContent = '���������ļ�... ' + pct + '%';
+                    hint.textContent = 'æ­£å¨ä¸è½½æä»¶... ' + pct + '%';
 
                   } else {
 
-                    hint.textContent = '���������ļ�... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+                    hint.textContent = 'æ­£å¨ä¸è½½æä»¶... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
 
                   }
 
                 }
 
-                // �ϲ����зֿ�
+                // åå¹¶ææåå
 
                 const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
 
@@ -2177,17 +2177,17 @@ function renderHighResQR(data, size) {
 
               } catch (streamErr) {
 
-                // ��ʽ��ȡʧ�ܣ����˵� arrayBuffer
+                // æµå¼è¯»åå¤±è´¥ï¼åéå° arrayBuffer
 
               }
 
             }
 
-            // ���ˣ�ȫ�� arrayBuffer���޽�����ʾ���ɿ���
+            // åéï¼å¨é arrayBufferï¼æ è¿åº¦æ¾ç¤ºä½å¯é ï¼
 
             if (!downloadOk) {
 
-              hint.textContent = '���������ļ�...';
+              hint.textContent = 'æ­£å¨ä¸è½½æä»¶...';
 
               buffer = new Uint8Array(await resp.arrayBuffer());
 
@@ -2201,13 +2201,13 @@ function renderHighResQR(data, size) {
 
             if (e.name === 'AbortError') {
 
-              hint.textContent = '���س�ʱ���������������';
+              hint.textContent = 'ä¸è½½è¶æ¶ï¼è¯·æ£æ¥ç½ç»åéè¯';
 
               hint.style.color = '#e74c3c';
 
             } else {
 
-              hint.textContent = '����ʧ�ܣ�������';
+              hint.textContent = 'ä¸è½½å¤±è´¥ï¼è¯·éè¯';
 
               hint.style.color = '#e74c3c';
 
@@ -2219,7 +2219,7 @@ function renderHighResQR(data, size) {
 
           if (!downloadOk) continue;
 
-          hint.textContent = '���ڽ����ļ�...';
+          hint.textContent = 'æ­£å¨è§£å¯æä»¶...';
 
           hint.style.color = 'var(--muted)';
 
