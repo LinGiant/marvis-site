@@ -1822,15 +1822,13 @@ function renderHighResQR(data, size) {
 
         const loadingHint = document.createElement('div');
 
-        loadingHint.textContent = '\u56fe\u7247\u52a0\u8f7d\u4e2d...';
+        loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
 
         loadingHint.style.cssText = 'color:var(--muted);font-size:0.85em;text-align:center;padding:20px;';
 
         wrapper.appendChild(loadingHint);
 
         const img = document.createElement('img');
-
-        img.src = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
 
         img.alt = '\u56fe\u7247';
 
@@ -1840,13 +1838,117 @@ function renderHighResQR(data, size) {
 
         img.style.display = 'none';
 
-        img.onload = function() { loadingHint.style.display = 'none'; img.style.display = ''; };
-
-        img.onerror = function() { loadingHint.textContent = '\u56fe\u7247\u52a0\u8f7d\u5931\u8d25'; loadingHint.style.color = '#e74c3c'; };
-
         wrapper.appendChild(img);
 
         section.appendChild(wrapper);
+
+        // 异步 fetch 下载 + 分块进度 + 超时控制
+
+        (async () => {
+
+          const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
+
+          const controller = new AbortController();
+
+          const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+          let blob;
+
+          try {
+
+            const resp = await fetch(fileUrl, { signal: controller.signal });
+
+            clearTimeout(timeoutId);
+
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+            // 尝试流式分块读取（支持进度显示）
+
+            if (resp.body && typeof resp.body.getReader === 'function') {
+
+              try {
+
+                const contentLength = +resp.headers.get('Content-Length') || 0;
+
+                const reader = resp.body.getReader();
+
+                const chunks = [];
+
+                let received = 0;
+
+                while (true) {
+
+                  const { done, value } = await reader.read();
+
+                  if (done) break;
+
+                  chunks.push(value);
+
+                  received += value.length;
+
+                  if (contentLength > 0) {
+
+                    const pct = Math.round((received / contentLength) * 100);
+
+                    loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247... ' + pct + '%';
+
+                  } else {
+
+                    loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+
+                  }
+
+                }
+
+                blob = new Blob(chunks);
+
+              } catch (streamErr) {
+
+                // 流式读取失败，回退到 arrayBuffer
+
+              }
+
+            }
+
+            // 回退：全量 arrayBuffer
+
+            if (!blob) {
+
+              loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
+
+              const buffer = await resp.arrayBuffer();
+
+              blob = new Blob([buffer]);
+
+            }
+
+            const blobUrl = URL.createObjectURL(blob);
+
+            img.src = blobUrl;
+
+            img.onload = function() { loadingHint.style.display = 'none'; img.style.display = ''; };
+
+            img.onerror = function() { loadingHint.textContent = '\u56fe\u7247\u52a0\u8f7d\u5931\u8d25'; loadingHint.style.color = '#e74c3c'; };
+
+          } catch (e) {
+
+            clearTimeout(timeoutId);
+
+            if (e.name === 'AbortError') {
+
+              loadingHint.textContent = '\u4e0b\u8f7d\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u540e\u91cd\u8bd5';
+
+            } else {
+
+              loadingHint.textContent = '\u4e0b\u8f7d\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5';
+
+            }
+
+            loadingHint.style.color = '#e74c3c';
+
+          }
+
+        })();
 
       }
 
