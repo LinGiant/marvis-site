@@ -699,7 +699,7 @@ function getExpireTimestamp() {
   } else {
     hours = parseInt(dur.value);
   }
-  return Date.now() + hours  3600  1000;
+  return Date.now() + hours * 3600 * 1000;
 }
 
 // ============ \u5185\u5bb9\u9879\u7ba1\u7406 ============
