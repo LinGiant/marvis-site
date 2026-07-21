@@ -1136,9 +1136,9 @@ document.getElementById('contentItemsContainer').addEventListener('click', funct
 
         case 'togglePwdVisibility':
       {
-        const input = document.querySelector('input[data-id="' + id + '"][data-action="updatePassword"]');
+        const input = document.querySelector('input[data-id="' + itemId + '"][data-action="updatePassword"]');
         if (input) {
-          const btn = document.querySelector('button[data-action="togglePwdVisibility"][data-id="' + id + '"]');
+          const btn = document.querySelector('button[data-action="togglePwdVisibility"][data-id="' + itemId + '"]');
           if (input.type === 'password') {
             input.type = 'text';
             if (btn) btn.textContent = '\ud83d\udc40';
@@ -2445,6 +2445,7 @@ addContentItem();
 </body>
 
 </html>
+
 
 
 
