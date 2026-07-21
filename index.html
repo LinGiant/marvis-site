@@ -647,7 +647,7 @@ const GITHUB_TOKEN = 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
 async function uploadToGitHub(filename, uint8Array) {
   const token = localStorage.getItem('gh_token') || GITHUB_TOKEN;
 
-  const base64 = btoa(String.fromCharCode(...uint8Array));
+  let binary = ''; const chunkSize = 8192; for (let i = 0; i < uint8Array.length; i += chunkSize) { binary += String.fromCharCode.apply(null, Array.from(uint8Array.subarray(i, i + chunkSize))); } const base64 = btoa(binary);
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
   const body = {
     message: 'Upload: ' + filename,
