@@ -606,26 +606,15 @@ const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
 
 function base64Encode(uint8Array) {
   return new Promise((resolve) => {
-    const batchSize = 65535; // Safe chunk size
-    let result = '';
-    let offset = 0;
-    function processBatch() {
-      const end = Math.min(offset + batchSize, uint8Array.length);
-      const batch = uint8Array.subarray(offset, end);
-      // Safe conversion without apply
-      let binary = '';
-      for (let i = 0; i < batch.length; i++) {
-        binary += String.fromCharCode(batch[i]);
-      }
+    var CHUNK_SIZE = 0x8000;
+    var result = '';
+    for (var offset = 0; offset < uint8Array.length; offset += CHUNK_SIZE) {
+      var end = Math.min(offset + CHUNK_SIZE, uint8Array.length);
+      var chunk = Array.prototype.slice.call(uint8Array.subarray(offset, end));
+      var binary = String.fromCharCode.apply(null, chunk);
       result += btoa(binary);
-      offset = end;
-      if (offset < uint8Array.length) {
-        setTimeout(processBatch, 0);
-      } else {
-        resolve(result);
-      }
     }
-    processBatch();
+    resolve(result);
   });
 }
 
@@ -660,6 +649,8 @@ async function uploadToGitHub(filename, uint8Array, onProgress) {
     const xhr = new XMLHttpRequest();
 
     xhr.open('PUT', url);
+    xhr.timeout = 300000; // 5 min timeout for large files
+    xhr.ontimeout = function() { resolve({ ok: false, msg: '上传超时', filename }); };
 
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
@@ -1892,7 +1883,7 @@ function renderHighResQR(data, size) {
 
         (async () => {
 
-          const fileUrl = 'https://jolly-voice-78ed.2417611398.workers.dev/LinGiant/marvis-site/main/images/' + item.file;
+          const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
 
           const controller = new AbortController();
 
@@ -2099,7 +2090,7 @@ function renderHighResQR(data, size) {
 
         try {
 
-          const fileUrl = 'https://jolly-voice-78ed.2417611398.workers.dev/LinGiant/marvis-site/main/images/' + item.file;
+          const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
 
           // ååä¸è½½ + è¿åº¦æ¾ç¤º + è¶æ¶æ§å¶ï¼å¸¦åéï¼
 
