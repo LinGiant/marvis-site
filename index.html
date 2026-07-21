@@ -610,7 +610,7 @@ async function uploadToGitHub(filename, uint8Array) {
 
 
 
-  let binary = ''; const chunkSize = 8192; for (let i = 0; i < uint8Array.length; i += chunkSize) { binary += String.fromCharCode.apply(null, Array.from(uint8Array.subarray(i, i + chunkSize))); } const base64 = btoa(binary);
+  const chunks = []; const chunkSize = 8192; for (let i = 0; i < uint8Array.length; i += chunkSize) { chunks.push(String.fromCharCode.apply(null, Array.from(uint8Array.subarray(i, i + chunkSize)))); } const binary = chunks.join(''); const base64 = btoa(binary);
 
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
 
@@ -1916,13 +1916,89 @@ function renderHighResQR(data, size) {
 
           const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
 
-          const resp = await fetch(fileUrl);
+          // 分块下载 + 进度显示 + 超时控制
 
-          if (!resp.ok) continue;
+          const controller = new AbortController();
 
-          const buffer = await resp.arrayBuffer();
+          const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-          const decrypted = await decryptImage(password, new Uint8Array(buffer));
+          let buffer;
+
+          try {
+
+            const resp = await fetch(fileUrl, { signal: controller.signal });
+
+            clearTimeout(timeoutId);
+
+            if (!resp.ok) continue;
+
+            const contentLength = +resp.headers.get('Content-Length') || 0;
+
+            const reader = resp.body.getReader();
+
+            const chunks = [];
+
+            let received = 0;
+
+            while (true) {
+
+              const { done, value } = await reader.read();
+
+              if (done) break;
+
+              chunks.push(value);
+
+              received += value.length;
+
+              if (contentLength > 0) {
+
+                const pct = Math.round((received / contentLength) * 100);
+
+                hint.textContent = '正在下载文件... ' + pct + '%';
+
+              } else {
+
+                hint.textContent = '正在下载文件... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+
+              }
+
+            }
+
+            // 合并所有分块
+
+            const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
+
+            buffer = new Uint8Array(totalLength);
+
+            let offset = 0;
+
+            for (const chunk of chunks) {
+
+              buffer.set(chunk, offset);
+
+              offset += chunk.length;
+
+            }
+
+          } catch (e) {
+
+            clearTimeout(timeoutId);
+
+            if (e.name === 'AbortError') {
+
+              hint.textContent = '下载超时，请检查网络后重试';
+
+              hint.style.color = '#e74c3c';
+
+            }
+
+            continue;
+
+          }
+
+          hint.textContent = '正在解密文件...';
+
+          const decrypted = await decryptImage(password, buffer);
 
 
 
