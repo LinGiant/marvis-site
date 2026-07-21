@@ -1882,7 +1882,7 @@ function renderHighResQR(data, size) {
 
                   if (done) break;
 
-                  chunks.push(value);
+                  chunks.push(value.slice());
 
                   received += value.length;
 
@@ -1900,25 +1900,22 @@ function renderHighResQR(data, size) {
 
                 }
 
-                blob = new Blob(chunks);
+                blob = new Blob(chunks, { type: resp.headers.get('Content-Type') || 'image/png' });
 
               } catch (streamErr) {
 
-                // 流式读取失败，回退到 arrayBuffer
+                // 流式读取失败，重新请求获取完整文件
+                loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
+                const resp2 = await fetch(fileUrl);
+                if (!resp2.ok) throw new Error('HTTP ' + resp2.status);
+                blob = await resp2.blob();
 
               }
 
-            }
+            } else {
 
-            // 回退：全量 arrayBuffer
-
-            if (!blob) {
-
-              loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
-
-              const buffer = await resp.arrayBuffer();
-
-              blob = new Blob([buffer]);
+              // 浏览器不支持 ReadableStream，直接用 blob()
+              blob = await resp.blob();
 
             }
 
@@ -2096,7 +2093,7 @@ function renderHighResQR(data, size) {
 
                   if (done) break;
 
-                  chunks.push(value);
+                  chunks.push(value.slice());
 
                   received += value.length;
 
