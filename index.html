@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="zh-CN">
 
@@ -598,19 +598,42 @@ let qrContentString = '';
 
 // ============ GITHUB_TOKEN ============
 
-const GITHUB_TOKEN = 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
 
 
 
-// ============ GitHub \u4e0a\u4f20 ============
+// ============ GitHub 上传 ============
 
-async function uploadToGitHub(filename, uint8Array) {
+function base64Encode(uint8Array) {
+  return new Promise((resolve) => {
+    const batchSize = 1048576;
+    let result = '';
+    let offset = 0;
+    function processBatch() {
+      const end = Math.min(offset + batchSize, uint8Array.length);
+      const batch = uint8Array.subarray(offset, end);
+      const binary = String.fromCharCode.apply(null, Array.from(batch));
+      result += btoa(binary);
+      offset = end;
+      if (offset < uint8Array.length) {
+        setTimeout(processBatch, 0);
+      } else {
+        resolve(result);
+      }
+    }
+    processBatch();
+  });
+}
+
+async function uploadToGitHub(filename, uint8Array, onProgress) {
 
   const token = localStorage.getItem('gh_token') || GITHUB_TOKEN;
 
+  if (onProgress) onProgress('encoding', 0);
 
+  const base64 = await base64Encode(uint8Array);
 
-  const chunks = []; const chunkSize = 8192; for (let i = 0; i < uint8Array.length; i += chunkSize) { chunks.push(String.fromCharCode.apply(null, Array.from(uint8Array.subarray(i, i + chunkSize)))); } const binary = chunks.join(''); const base64 = btoa(binary);
+  if (onProgress) onProgress('uploading', 0);
 
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
 
@@ -624,47 +647,61 @@ async function uploadToGitHub(filename, uint8Array) {
 
   };
 
+  const bodyStr = JSON.stringify(body);
 
 
-  try {
 
-    const resp = await fetch(url, {
+  return new Promise((resolve) => {
 
-      method: 'PUT',
+    const xhr = new XMLHttpRequest();
 
-      headers: {
+    xhr.open('PUT', url);
 
-        'Authorization': 'Bearer ' + token,
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
-        'Content-Type': 'application/json',
+    xhr.setRequestHeader('Content-Type', 'application/json');
 
-        'Accept': 'application/vnd.github+json'
+    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
 
-      },
 
-      body: JSON.stringify(body)
+
+    xhr.upload.addEventListener('progress', (e) => {
+
+      if (e.lengthComputable && onProgress) {
+
+        onProgress('uploading', Math.round((e.loaded / e.total) * 100));
+
+      }
 
     });
 
-    if (!resp.ok) {
 
-      const err = await resp.json();
 
-      throw new Error(err.message || 'HTTP ' + resp.status);
+    xhr.onload = () => {
 
-    }
+      if (xhr.status >= 200 && xhr.status < 300) {
 
-    return { ok: true, filename };
+        resolve({ ok: true, filename });
 
-  } catch (err) {
+      } else {
 
-    return { ok: false, msg: err.message, filename };
+        let msg = 'HTTP ' + xhr.status;
 
-  }
+        try { msg = JSON.parse(xhr.responseText).message || msg; } catch {}
+
+        resolve({ ok: false, msg, filename });
+
+      }
+
+    };
+
+    xhr.onerror = () => resolve({ ok: false, msg: '网络错误', filename });
+
+    xhr.send(bodyStr);
+
+  });
 
 }
-
-
 
 // ============ AES-256-GCM \u52a0\u5bc6 ============
 
@@ -1549,7 +1586,19 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 
         const row = document.getElementById('uploadRow-' + task.filename);
 
-        const result = await uploadToGitHub(task.filename, task.uint8Array);
+        const result = await uploadToGitHub(task.filename, task.uint8Array, (phase, pct) => {
+
+          if (phase === 'encoding') {
+
+            row.querySelector('.u-msg').textContent = '正在编码...';
+
+          } else {
+
+            row.querySelector('.u-msg').textContent = '上传中 ' + pct + '%';
+
+          }
+
+        });
 
         if (result.ok) {
 
