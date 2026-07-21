@@ -1,23 +1,30 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>&#x4e8c;&#x7ef4;&#x7801;&#x751f;&#x6210;&#x5668;</title>
+
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<style><style>
+
+<style>﻿
 /* ===== Retro Premium — 复古简约高端 ===== */
 :root {
-  --bg: #1c1613;
-  --card: #25201b;
-  --border: #3a3028;
-  --primary: #c9a55c;
-  --primary-glow: rgba(201,165,92,0.15);
-  --primary-hover: #d4b36e;
-  --text: #e8dcc8;
-  --muted: #8a7e6b;
-  --danger: #c4665a;
-  --success: #8aaa59;
+  --bg: #f3ede4;
+  --card: #eae2d5;
+  --border: #d0c5b2;
+  --primary: #a8774d;
+  --primary-glow: rgba(168,119,77,0.2);
+  --primary-hover: #b8875c;
+  --text: #3e2b1c;
+  --muted: #8c7a66;
+  --danger: #b85241;
+  --success: #7a9452;
   --radius: 10px;
   --font-serif: Georgia, "Times New Roman", "Songti SC", serif;
 }
@@ -65,7 +72,7 @@ body {
   font-size: 0.85em; color: var(--muted);
   transition: background 0.25s;
 }
-.gh-settings-header:hover { background: rgba(201,165,92,0.04); }
+.gh-settings-header:hover { background: rgba(168,119,77,0.04); }
 .gh-settings-header .arrow {
   transition: transform 0.3s; font-size: 0.65em; color: var(--muted);
 }
@@ -91,10 +98,10 @@ body {
   cursor: pointer; font-size: 0.85em; font-family: inherit;
   white-space: nowrap; transition: all 0.25s;
 }
-.gh-save-btn:hover { background: var(--primary); color: #1c1613; }
+.gh-save-btn:hover { background: var(--primary); color: #fbf8f2; }
 .gh-save-btn.saved { border-color: var(--success); color: var(--success); }
-.gh-save-btn.saved:hover { background: var(--success); color: #1c1613; }
-.gh-help { font-size: 0.72em; color: #5a5044; line-height: 1.7; }
+.gh-save-btn.saved:hover { background: var(--success); color: #fbf8f2; }
+.gh-help { font-size: 0.72em; color: #a89880; line-height: 1.7; }
 
 /* ===== Title Card ===== */
 .title-card {
@@ -116,7 +123,7 @@ body {
   transition: border-color 0.25s;
 }
 .title-card input:focus { outline: none; border-color: var(--primary); }
-.title-card input::placeholder { color: #5a5044; }
+.title-card input::placeholder { color: #a89880; }
 
 /* ===== Content Item Card ===== */
 .content-item-card {
@@ -157,7 +164,7 @@ body {
   font-family: inherit; transition: all 0.25s; letter-spacing: 1px;
 }
 .type-option.active {
-  background: var(--primary); color: #1c1613;
+  background: var(--primary); color: #fbf8f2;
   border-color: var(--primary); font-weight: 500;
 }
 
@@ -172,7 +179,7 @@ body {
   transition: border-color 0.25s; line-height: 1.7;
 }
 .item-content-area textarea:focus { outline: none; border-color: var(--primary); }
-.item-content-area textarea::placeholder { color: #5a5044; }
+.item-content-area textarea::placeholder { color: #a89880; }
 
 /* ===== Image Upload ===== */
 .img-upload-area {
@@ -180,7 +187,7 @@ body {
   padding: 24px; text-align: center; cursor: pointer;
   transition: all 0.3s; background: var(--bg);
 }
-.img-upload-area:hover { border-color: var(--primary); background: rgba(201,165,92,0.03); }
+.img-upload-area:hover { border-color: var(--primary); background: rgba(168,119,77,0.03); }
 .img-upload-area .upload-icon { font-size: 1.8em; margin-bottom: 8px; }
 .img-upload-area .hint { color: var(--muted); font-size: 0.75em; margin-top: 6px; }
 .img-upload-area input[type="file"] { display: none; }
@@ -199,12 +206,12 @@ body {
 .encryption-label { font-size: 0.82em; color: var(--muted); font-weight: 500; letter-spacing: 1px; }
 .encryption-toggle {
   position: relative; width: 46px; height: 26px;
-  background: #3a3028; border-radius: 13px;
+  background: #c4b8a0; border-radius: 13px;
   cursor: pointer; transition: background 0.3s; flex-shrink: 0;
 }
 .encryption-toggle::after {
   content: ''; position: absolute; top: 2px; left: 2px;
-  width: 22px; height: 22px; background: #e8dcc8;
+  width: 22px; height: 22px; background: #ffffff;
   border-radius: 50%; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .encryption-toggle.on { background: var(--primary); }
@@ -225,14 +232,14 @@ body {
   transition: border-color 0.25s;
 }
 .password-row input:focus { outline: none; border-color: var(--primary); }
-.password-row input::placeholder { color: #5a5044; }
+.password-row input::placeholder { color: #a89880; }
 .random-pwd-btn {
   padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px;
   background: transparent; color: var(--primary);
   cursor: pointer; font-size: 0.78em; font-family: inherit;
   white-space: nowrap; transition: all 0.25s;
 }
-.random-pwd-btn:hover { background: rgba(201,165,92,0.08); border-color: var(--primary); }
+.random-pwd-btn:hover { background: rgba(168,119,77,0.08); border-color: var(--primary); }
 
 /* ===== Add Item Button ===== */
 .add-item-btn {
@@ -245,7 +252,7 @@ body {
 }
 .add-item-btn:hover {
   border-color: var(--primary); color: var(--primary);
-  background: rgba(201,165,92,0.03);
+  background: rgba(168,119,77,0.03);
 }
 
 /* ===== Expiry Settings ===== */
@@ -261,20 +268,20 @@ body {
   cursor: pointer; user-select: none; gap: 14px;
   transition: background 0.25s;
 }
-.setting-header:hover { background: rgba(201,165,92,0.04); }
+.setting-header:hover { background: rgba(168,119,77,0.04); }
 .setting-icon { font-size: 1.4em; flex-shrink: 0; line-height: 1; }
 .setting-info { flex: 1; min-width: 0; }
-.setting-title { font-size: 0.92em; font-weight: 500; color: #d4c8b0; }
+.setting-title { font-size: 0.92em; font-weight: 500; color: #5a3d28; }
 .setting-desc { font-size: 0.76em; color: var(--muted); margin-top: 3px; transition: color 0.3s; }
 .setting-card.active .setting-desc { color: var(--primary); }
 .setting-switch {
   position: relative; width: 46px; height: 26px;
-  background: #3a3028; border-radius: 13px;
+  background: #c4b8a0; border-radius: 13px;
   transition: background 0.3s; flex-shrink: 0;
 }
 .setting-switch::after {
   content: ''; position: absolute; top: 2px; left: 2px;
-  width: 22px; height: 22px; background: #e8dcc8;
+  width: 22px; height: 22px; background: #ffffff;
   border-radius: 50%; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .setting-switch.on { background: var(--primary); }
@@ -306,7 +313,7 @@ body {
   width: 100%; padding: 16px;
   border: none; border-radius: var(--radius);
   background: var(--primary);
-  color: #1c1613;
+  color: #fbf8f2;
   font-family: var(--font-serif);
   font-size: 1em; font-weight: 600; cursor: pointer;
   transition: all 0.3s; letter-spacing: 3px;
@@ -325,7 +332,7 @@ body {
 .qr-result .qr-wrapper {
   display: inline-block; background: #fff;
   border-radius: 14px; padding: 18px;
-  box-shadow: 0 6px 30px rgba(201,165,92,0.2);
+  box-shadow: 0 6px 30px rgba(168,119,77,0.2);
 }
 .qr-result .qr-meta { margin-top: 14px; color: var(--muted); font-size: 0.82em; }
 .download-btn {
@@ -336,20 +343,20 @@ body {
   font-family: inherit; letter-spacing: 1px;
   transition: all 0.25s;
 }
-.download-btn:hover { background: var(--primary); color: #1c1613; }
+.download-btn:hover { background: var(--primary); color: #fbf8f2; }
 
 /* ===== Upload Status ===== */
 .upload-detail-list { margin-top: 14px; text-align: left; }
 .upload-detail-row {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 0; font-size: 0.8em;
-  border-bottom: 1px solid rgba(201,165,92,0.06);
+  border-bottom: 1px solid rgba(168,119,77,0.06);
 }
 .upload-detail-row .u-icon { flex-shrink: 0; width: 20px; text-align: center; }
 .upload-detail-row .u-icon.ok { color: var(--success); }
 .upload-detail-row .u-icon.err { color: var(--danger); }
 .upload-detail-row .u-icon.wait { color: var(--primary); }
-.upload-detail-row .u-name { flex: 1; word-break: break-all; color: #b8a88a; }
+.upload-detail-row .u-name { flex: 1; word-break: break-all; color: #6b4d35; }
 .upload-detail-row .u-msg { font-size: 0.9em; }
 
 /* ===== View Page (扫码展示页) ===== */
@@ -374,7 +381,7 @@ body.view-page {
 .view-card .view-title {
   font-family: var(--font-serif);
   font-size: 1.15em; margin-bottom: 16px;
-  color: #d4c8b0; font-weight: 400;
+  color: #5a3d28; font-weight: 400;
 }
 .view-card .content-area {
   background: var(--bg); border-radius: 8px;
@@ -413,871 +420,1739 @@ body.view-page {
 }
 
 /* ===== Footer ===== */
-footer { text-align: center; color: #4a4038; font-size: 0.72em; margin-top: 32px; letter-spacing: 1px; }
-</style></style>
+footer { text-align: center; color: #9c8c78; font-size: 0.72em; margin-top: 32px; letter-spacing: 1px; }
+
+</style>
+
 </head>
+
 <body>
+
 <div class="container" id="generator">
+
   <div class="header">
+
     <h1>&#x4e8c;&#x7ef4;&#x7801;&#x751f;&#x6210;&#x5668;</h1>
+
     <div class="sub">&#x591a;&#x5185;&#x5bb9; &middot; &#x72ec;&#x7acb;&#x5bc6;&#x7801; &middot; &#x65f6;&#x6548;&#x63a7;&#x5236;</div>
+
   </div>
+
+
 
   <!-- GitHub &#x8bbe;&#x7f6e; -->
+
   <div class="gh-settings" id="ghSettings">
+
     <div class="gh-settings-header" id="ghSettingsHeader">
+
       <span class="arrow">&#9654;</span>
+
       <span>&#9881; &#x8bbe;&#x7f6e;</span>
+
     </div>
+
     <div class="gh-settings-body">
+
       <div class="gh-row">
+
         <input type="password" id="ghTokenInput" placeholder="GitHub &#x8bbf;&#x95ee;&#x4ee4;&#x724c;&#xff08;&#x5df2;&#x5185;&#x7f6e;&#xff0c;&#x53ef;&#x4e0d;&#x586b;&#xff09;" maxlength="200">
+
         <button class="gh-save-btn" id="ghSaveBtn">&#x4fdd;&#x5b58;</button>
+
       </div>
+
       <div class="gh-help">
+
         &#x4ee4;&#x724c;&#x5df2;&#x5185;&#x7f6e;&#xff0c;&#x65e0;&#x9700;&#x586b;&#x5199;&#x3002;&#x5982;&#x9700;&#x66f4;&#x6362;&#x4ee4;&#x724c;&#xff0c;&#x5728; GitHub &#x2192; Settings &#x2192; Developer settings &#x2192; Personal access tokens &#x521b;&#x5efa;&#xff0c;&#x4ec5;&#x52fe;&#x9009; LinGiant/marvis-site &#x4ed3;&#x5e93;&#x7684; Contents &#x8bfb;&#x5199;&#x6743;&#x9650;&#x3002;
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- &#x6807;&#x9898;&#x533a; -->
+
   <div class="title-card">
+
     <label>&#x4e8c;&#x7ef4;&#x7801;&#x6807;&#x9898;&#xff08;&#x9009;&#x586b;&#xff09;</label>
+
     <input type="text" id="titleInput" placeholder="&#x8f93;&#x5165;&#x6807;&#x9898;&#xff0c;&#x626b;&#x7801;&#x540e;&#x5c06;&#x663e;&#x793a;&#x5728;&#x5185;&#x5bb9;&#x4e0a;&#x65b9;" maxlength="200">
+
   </div>
+
+
 
   <!-- &#x5185;&#x5bb9;&#x9879;&#x5217;&#x8868; -->
+
   <div id="contentItemsContainer"></div>
 
+
+
   <!-- &#x6dfb;&#x52a0;&#x5185;&#x5bb9;&#x6309;&#x94ae; -->
+
   <button class="add-item-btn" id="addItemBtn">+ &#x6dfb;&#x52a0;&#x5185;&#x5bb9;</button>
 
+
+
   <!-- &#x6709;&#x6548;&#x671f;&#x8bbe;&#x7f6e; -->
+
   <div class="settings-section">
+
     <div class="setting-card" id="expireCard">
+
       <div class="setting-header" id="expireHeader">
+
         <div class="setting-icon">&#x23F1;</div>
+
         <div class="setting-info">
+
           <div class="setting-title">&#x6709;&#x6548;&#x671f;</div>
+
           <div class="setting-desc" id="expireDesc">&#x5173;&#x95ed;</div>
+
         </div>
+
         <div class="setting-switch" id="expireSwitch"></div>
+
       </div>
+
       <div class="setting-body" id="expireBody">
+
         <select class="expire-select" id="expireDuration">
+
           <option value="1">1 &#x5c0f;&#x65f6;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="6">6 &#x5c0f;&#x65f6;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="24" selected>24 &#x5c0f;&#x65f6;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="72">3 &#x5929;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="168">7 &#x5929;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="720">30 &#x5929;&#x540e;&#x8fc7;&#x671f;</option>
+
           <option value="custom">&#x81ea;&#x5b9a;&#x4e49;&#x5c0f;&#x65f6;&#x6570;</option>
+
         </select>
+
         <input type="number" id="expireCustomHours" class="expire-custom-input" placeholder="&#x8f93;&#x5165;&#x5c0f;&#x65f6;&#x6570;&#xff08;&#x6700;&#x5c0f; 1&#xff09;" min="1">
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- &#x751f;&#x6210;&#x6309;&#x94ae; -->
+
   <button class="generate-btn" id="generateBtn">&#x751f;&#x6210;&#x4e8c;&#x7ef4;&#x7801;</button>
 
+
+
   <!-- &#x4e8c;&#x7ef4;&#x7801;&#x7ed3;&#x679c; -->
+
   <div class="qr-result" id="qrResult">
+
     <div class="qr-wrapper">
+
       <div id="qrcode"></div>
+
     </div>
+
     <div id="expireHint" class="status success" style="display:none;margin-top:10px"></div>
+
     <div class="upload-detail-list" id="uploadDetailList"></div>
+
     <button class="download-btn" id="downloadBtn" style="display:none;">&#x4e0b;&#x8f7d;&#x9ad8;&#x6e05;&#x4e8c;&#x7ef4;&#x7801; (PNG)</button>
+
   </div>
 
+
+
   <footer>&copy; Marvis &#x5de5;&#x5177;</footer>
+
 </div>
 
+
+
 <script>
+
 // ============ \u5168\u5c40\u72b6\u6001 ============
+
 let contentItems = [];
+
 let itemIdCounter = 0;
+
 let titleText = '';
+
 let qrContentString = '';
 
+
+
 // ============ GITHUB_TOKEN ============
+
 const GITHUB_TOKEN = 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
 
+
+
 // ============ GitHub \u4e0a\u4f20 ============
+
 async function uploadToGitHub(filename, uint8Array) {
+
   const token = localStorage.getItem('gh_token') || GITHUB_TOKEN;
 
+
+
   let binary = ''; const chunkSize = 8192; for (let i = 0; i < uint8Array.length; i += chunkSize) { binary += String.fromCharCode.apply(null, Array.from(uint8Array.subarray(i, i + chunkSize))); } const base64 = btoa(binary);
+
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
+
   const body = {
+
     message: 'Upload: ' + filename,
+
     content: base64,
+
     branch: 'main'
+
   };
 
+
+
   try {
+
     const resp = await fetch(url, {
+
       method: 'PUT',
+
       headers: {
+
         'Authorization': 'Bearer ' + token,
+
         'Content-Type': 'application/json',
+
         'Accept': 'application/vnd.github+json'
+
       },
+
       body: JSON.stringify(body)
+
     });
+
     if (!resp.ok) {
+
       const err = await resp.json();
+
       throw new Error(err.message || 'HTTP ' + resp.status);
+
     }
+
     return { ok: true, filename };
+
   } catch (err) {
+
     return { ok: false, msg: err.message, filename };
+
   }
+
 }
+
+
 
 // ============ AES-256-GCM \u52a0\u5bc6 ============
+
 async function encryptImage(password, arrayBuffer) {
+
   const salt = crypto.getRandomValues(new Uint8Array(16));
+
   const enc = new TextEncoder();
+
   const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+
   const key = await crypto.subtle.deriveKey(
+
     { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+
     keyMaterial,
+
     { name: 'AES-GCM', length: 256 },
+
     false,
+
     ['encrypt']
+
   );
+
   const iv = crypto.getRandomValues(new Uint8Array(12));
+
   const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, arrayBuffer);
+
   const result = new Uint8Array(16 + 12 + ciphertext.byteLength);
+
   result.set(salt, 0);
+
   result.set(iv, 16);
+
   result.set(new Uint8Array(ciphertext), 28);
+
   return result;
+
 }
+
+
 
 // ============ AES-256-GCM \u89e3\u5bc6 ============
+
 async function decryptImage(password, encryptedBuffer) {
+
   const salt = encryptedBuffer.slice(0, 16);
+
   const iv = encryptedBuffer.slice(16, 28);
+
   const ciphertext = encryptedBuffer.slice(28);
+
   const enc = new TextEncoder();
+
   const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+
   const key = await crypto.subtle.deriveKey(
+
     { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+
     keyMaterial,
+
     { name: 'AES-GCM', length: 256 },
+
     false,
+
     ['decrypt']
+
   );
+
   return await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
+
 }
+
+
 
 // ============ \u968f\u673a\u5bc6\u7801\u751f\u6210 ============
+
 function generateRandomPassword() {
+
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
   const arr = new Uint8Array(8);
+
   crypto.getRandomValues(arr);
+
   let pwd = '';
+
   for (let i = 0; i < 8; i++) {
+
     pwd += chars[arr[i] % chars.length];
+
   }
+
   return pwd;
+
 }
+
+
 
 // ============ \u6709\u6548\u671f\u8bbe\u7f6e ============
+
 let expireEnabled = false;
 
+
+
 function toggleExpire() {
+
   expireEnabled = !expireEnabled;
+
   const card = document.getElementById('expireCard');
+
   const sw = document.getElementById('expireSwitch');
+
   const body = document.getElementById('expireBody');
+
   const desc = document.getElementById('expireDesc');
+
   sw.classList.toggle('on', expireEnabled);
+
   card.classList.toggle('active', expireEnabled);
+
   body.classList.toggle('open', expireEnabled);
+
   if (expireEnabled) {
+
     updateExpireDesc();
+
   } else {
+
     desc.textContent = '\u5173\u95ed';
+
   }
+
 }
+
+
 
 document.getElementById('expireHeader').addEventListener('click', toggleExpire);
 
+
+
 function updateExpireDesc() {
+
   const dur = document.getElementById('expireDuration');
+
   const customInput = document.getElementById('expireCustomHours');
+
   const labels = {'1':'1\u5c0f\u65f6\u540e\u8fc7\u671f','6':'6\u5c0f\u65f6\u540e\u8fc7\u671f','24':'24\u5c0f\u65f6\u540e\u8fc7\u671f','72':'3\u5929\u540e\u8fc7\u671f','168':'7\u5929\u540e\u8fc7\u671f','720':'30\u5929\u540e\u8fc7\u671f'};
+
   if (dur.value === 'custom') {
+
     const v = parseInt(customInput.value);
+
     if (v && v >= 1) {
+
       document.getElementById('expireDesc').textContent = v + '\u5c0f\u65f6\u540e\u8fc7\u671f';
+
     } else {
+
       document.getElementById('expireDesc').textContent = '\u81ea\u5b9a\u4e49\uff08\u8bf7\u586b\u5199\u5c0f\u65f6\u6570\uff09';
+
     }
+
   } else {
+
     document.getElementById('expireDesc').textContent = labels[dur.value] || '\u5df2\u542f\u7528';
+
   }
+
 }
 
+
+
 document.getElementById('expireDuration').addEventListener('change', function() {
+
   const customInput = document.getElementById('expireCustomHours');
+
   if (this.value === 'custom') {
+
     customInput.style.display = 'block';
+
   } else {
+
     customInput.style.display = 'none';
+
     customInput.value = '';
+
   }
+
   updateExpireDesc();
+
 });
+
+
 
 document.getElementById('expireCustomHours').addEventListener('input', updateExpireDesc);
 
+
+
 function getExpireTimestamp() {
+
   if (!expireEnabled) return null;
+
   const dur = document.getElementById('expireDuration');
+
   let hours;
+
   if (dur.value === 'custom') {
+
     hours = parseInt(document.getElementById('expireCustomHours').value);
+
     if (!hours || hours < 1) return null;
+
   } else {
+
     hours = parseInt(dur.value);
+
   }
+
   return Date.now() + hours * 3600 * 1000;
+
 }
+
+
 
 // ============ \u5185\u5bb9\u9879\u7ba1\u7406 ============
+
 function createContentItem(id) {
+
   return {
+
     id,
+
     type: 'text',
+
     textContent: '',
+
     imageFile: null,
+
     imageData: null,
+
     previewUrl: null,
+
     imageInfo: '',
+
     encryptionEnabled: false,
+
     password: ''
+
   };
+
 }
 
+
+
 function renderContentItem(item) {
+
   const container = document.getElementById('contentItemsContainer');
+
   const existing = document.getElementById('item-' + item.id);
 
+
+
   const card = document.createElement('div');
+
   card.className = 'content-item-card';
+
   card.id = 'item-' + item.id;
+
+
 
   const idx = contentItems.findIndex(ci => ci.id === item.id) + 1;
 
+
+
   card.innerHTML =
+
     '<div class="item-header">' +
+
       '<span class="item-label">\u5185\u5bb9 #' + idx + '</span>' +
+
       '<button class="delete-item-btn" data-action="delete" data-id="' + item.id + '">\u00d7 \u5220\u9664</button>' +
+
     '</div>' +
+
     '<div class="item-type-row">' +
+
       '<button class="type-option' + (item.type === 'text' ? ' active' : '') + '" data-action="setType" data-id="' + item.id + '" data-type="text">\u6587\u5b57</button>' +
+
       '<button class="type-option' + (item.type === 'image' ? ' active' : '') + '" data-action="setType" data-id="' + item.id + '" data-type="image">\u56fe\u7247</button>' +
+
     '</div>' +
+
     '<div class="item-content-area">' +
+
       (item.type === 'text'
+
         ? '<textarea placeholder="\u8f93\u5165\u6587\u5b57\u5185\u5bb9..." data-action="updateText" data-id="' + item.id + '">' + escapeHtml(item.textContent) + '</textarea>'
+
         : (item.previewUrl
+
             ? '<div class="img-upload-area" id="imgArea-' + item.id + '">' +
+
                 '<div class="upload-icon">&#x1F5BC;</div>' +
+
                 '<div>\u70b9\u51fb\u66f4\u6362\u56fe\u7247</div>' +
+
                 '<div class="hint">\u652f\u6301 JPG / PNG / GIF / WebP</div>' +
+
                 '<input type="file" accept="image/*" data-action="uploadImage" data-id="' + item.id + '">' +
+
               '</div>' +
+
               '<img class="item-preview-img" src="' + item.previewUrl + '" alt="\u9884\u89c8">' +
+
               '<div class="item-img-info">' + item.imageInfo + '</div>'
+
             : '<div class="img-upload-area" id="imgArea-' + item.id + '">' +
+
                 '<div class="upload-icon">&#x1F5BC;</div>' +
+
                 '<div>\u70b9\u51fb\u4e0a\u4f20\u56fe\u7247</div>' +
+
                 '<div class="hint">\u652f\u6301 JPG / PNG / GIF / WebP</div>' +
+
                 '<input type="file" accept="image/*" data-action="uploadImage" data-id="' + item.id + '">' +
+
               '</div>' +
+
               '<img class="item-preview-img" style="display:none" id="preview-' + item.id + '">' +
+
               '<div class="item-img-info" style="display:none" id="imgInfo-' + item.id + '"></div>')) +
+
     '</div>' +
+
     '<div class="encryption-row">' +
+
       '<span class="encryption-label">\u52a0\u5bc6</span>' +
+
       '<div class="encryption-toggle' + (item.encryptionEnabled ? ' on' : '') + '" data-action="toggleEncryption" data-id="' + item.id + '"></div>' +
+
     '</div>' +
+
     '<div class="password-row" id="pwdRow-' + item.id + '" style="display:' + (item.encryptionEnabled ? 'flex' : 'none') + '">' +
+
       '<input type="password" placeholder="\u8bbe\u7f6e\u5bc6\u7801\uff08\u81f3\u5c114\u4f4d\uff09" maxlength="50" data-action="updatePassword" data-id="' + item.id + '" value="' + escapeHtml(item.password) + '">' +
+
       '<button class="random-pwd-btn" data-action="randomPassword" data-id="' + item.id + '">\u1f3b2 \u968f\u673a\u751f\u6210</button>' +
+
     '</div>';
 
+
+
   // \u5982\u679c\u5df2\u5b58\u5728\u540cID\uff0c\u66ff\u6362\uff1b\u5426\u5219\u8ffd\u52a0
+
   if (existing) {
+
     existing.replaceWith(card);
+
   } else {
+
     container.appendChild(card);
+
   }
+
 }
+
+
 
 function escapeHtml(str) {
+
   const div = document.createElement('div');
+
   div.textContent = str;
+
   return div.innerHTML;
+
 }
 
+
+
 // ============ \u4e8b\u4ef6\u59d4\u6258 ============
+
 document.getElementById('contentItemsContainer').addEventListener('click', function(e) {
+
   const target = e.target.closest('[data-action]');
+
   if (!target) return;
+
   const action = target.dataset.action;
+
   const itemId = parseInt(target.dataset.id);
 
+
+
   const item = contentItems.find(ci => ci.id === itemId);
+
   if (!item) return;
 
+
+
   switch (action) {
+
     case 'delete':
+
       removeContentItem(itemId);
+
       break;
+
     case 'setType':
+
       item.type = target.dataset.type;
+
       renderContentItem(item);
+
       rebindItemEvents(item);
+
       break;
+
     case 'toggleEncryption':
+
       item.encryptionEnabled = !item.encryptionEnabled;
+
       renderContentItem(item);
+
       rebindItemEvents(item);
+
       break;
+
     case 'randomPassword':
+
       const pwd = generateRandomPassword();
+
       item.password = pwd;
+
       renderContentItem(item);
+
       rebindItemEvents(item);
+
       break;
+
   }
+
 });
+
+
 
 document.getElementById('contentItemsContainer').addEventListener('input', function(e) {
+
   const target = e.target.closest('[data-action]');
+
   if (!target) return;
+
   const action = target.dataset.action;
+
   const itemId = parseInt(target.dataset.id);
+
   const item = contentItems.find(ci => ci.id === itemId);
+
   if (!item) return;
 
+
+
   switch (action) {
+
     case 'updateText':
+
       item.textContent = target.value;
+
       break;
+
     case 'updatePassword':
+
       item.password = target.value;
+
       break;
+
   }
+
 });
 
+
+
 document.getElementById('contentItemsContainer').addEventListener('change', async function(e) {
+
   const target = e.target.closest('[data-action="uploadImage"]');
+
   if (!target) return;
+
   const itemId = parseInt(target.dataset.id);
+
   const item = contentItems.find(ci => ci.id === itemId);
+
   if (!item || !target.files || !target.files[0]) return;
+
+
 
   const file = target.files[0];
 
+
+
   // \u6e05\u7406\u65e7\u9884\u89c8
+
   if (item.previewUrl) {
+
     URL.revokeObjectURL(item.previewUrl);
+
   }
+
+
 
   try {
+
     const arrayBuffer = await new Promise((resolve, reject) => {
+
       const reader = new FileReader();
+
       reader.onload = () => resolve(reader.result);
+
       reader.onerror = reject;
+
       reader.readAsArrayBuffer(file);
+
     });
+
+
 
     item.imageData = arrayBuffer;
+
     item.imageFile = file;
+
     item.previewUrl = URL.createObjectURL(file);
 
+
+
     const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+
     item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB';
 
+
+
     // \u52a0\u8f7d\u7cbe\u786e\u5c3a\u5bf8
+
     const img = new Image();
+
     img.onload = () => {
+
       item.imageInfo = img.width + '\u00d7' + img.height + ' \u00b7 ' + sizeMB + ' MB';
+
       const infoDiv = document.getElementById('imgInfo-' + item.id);
+
       if (infoDiv) infoDiv.textContent = item.imageInfo;
+
     };
+
     img.src = item.previewUrl;
 
+
+
     renderContentItem(item);
+
     rebindItemEvents(item);
+
   } catch (err) {
+
     item.imageData = null;
+
     item.imageFile = null;
+
   }
+
 });
 
+
+
 function rebindItemEvents(item) {
+
   // \u56fe\u7247\u4e0a\u4f20\u533a\u70b9\u51fb
+
   const imgArea = document.getElementById('imgArea-' + item.id);
+
   if (imgArea) {
+
     imgArea.addEventListener('click', function() {
+
       const input = this.querySelector('input[type="file"]');
+
       if (input) input.click();
+
     });
+
   }
+
 }
+
+
 
 function removeContentItem(id) {
+
   const item = contentItems.find(ci => ci.id === id);
+
   if (item && item.previewUrl) {
+
     URL.revokeObjectURL(item.previewUrl);
+
   }
+
   contentItems = contentItems.filter(ci => ci.id !== id);
+
   const card = document.getElementById('item-' + id);
+
   if (card) card.remove();
+
   // \u91cd\u65b0\u6e32\u67d3\u6240\u6709\u9879\u7684\u7f16\u53f7
+
   contentItems.forEach((ci, i) => {
+
     const label = document.querySelector('#item-' + ci.id + ' .item-label');
+
     if (label) label.textContent = '\u5185\u5bb9 #' + (i + 1);
+
   });
+
 }
 
+
+
 function addContentItem() {
+
   const id = ++itemIdCounter;
+
   const item = createContentItem(id);
+
   contentItems.push(item);
+
   renderContentItem(item);
+
   rebindItemEvents(item);
+
 }
+
+
 
 document.getElementById('addItemBtn').addEventListener('click', addContentItem);
 
+
+
 // ============ \u751f\u6210\u6309\u94ae ============
+
 document.getElementById('generateBtn').addEventListener('click', async () => {
+
   const resultDiv = document.getElementById('qrResult');
+
   const qrContainer = document.getElementById('qrcode');
+
   const downloadBtn = document.getElementById('downloadBtn');
+
   const expireHint = document.getElementById('expireHint');
+
   const detailList = document.getElementById('uploadDetailList');
 
+
+
   qrContainer.innerHTML = '';
+
   downloadBtn.style.display = 'none';
+
   expireHint.style.display = 'none';
+
   detailList.innerHTML = '';
 
+
+
   // \u66f4\u65b0\u6807\u9898
+
   titleText = document.getElementById('titleInput').value.trim();
 
+
+
   // \u6821\u9a8c
+
   if (contentItems.length === 0) {
+
     resultDiv.classList.add('show');
+
     qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u8bf7\u81f3\u5c11\u6dfb\u52a0\u4e00\u4e2a\u5185\u5bb9\u9879</span>';
+
     return;
+
   }
+
+
 
   // \u6821\u9a8c\u5bc6\u7801
+
   for (const item of contentItems) {
+
     if (item.encryptionEnabled && (!item.password || item.password.length < 4)) {
+
       resultDiv.classList.add('show');
+
       qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u5185\u5bb9 #' + (contentItems.indexOf(item) + 1) + ' \u5df2\u5f00\u542f\u52a0\u5bc6\u4f46\u5bc6\u7801\u4e0d\u8db34\u4f4d</span>';
+
       return;
+
     }
+
     if (item.type === 'image' && !item.imageData) {
+
       resultDiv.classList.add('show');
+
       qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u5185\u5bb9 #' + (contentItems.indexOf(item) + 1) + ' \u4e3a\u56fe\u7247\u7c7b\u578b\u4f46\u672a\u4e0a\u4f20\u56fe\u7247</span>';
+
       return;
+
     }
+
   }
+
+
 
   // \u83b7\u53d6\u6709\u6548\u671f
+
   const expire = getExpireTimestamp();
 
+
+
   // \u6784\u5efa payload items
+
   const payloadItems = [];
+
   const uploadTasks = []; // { item, filename, uint8Array }
 
+
+
   for (const item of contentItems) {
+
     if (item.encryptionEnabled) {
+
       // \u52a0\u5bc6\u9879\uff1a\u751f\u6210 .enc \u6587\u4ef6
+
       const filename = crypto.randomUUID() + '.enc';
+
       let dataToEncrypt;
 
+
+
       if (item.type === 'text') {
+
         dataToEncrypt = new TextEncoder().encode(item.textContent).buffer;
+
       } else {
+
         dataToEncrypt = item.imageData;
+
       }
+
+
 
       const encrypted = await encryptImage(item.password, dataToEncrypt);
+
       payloadItems.push({ mode: item.type, file: filename });
+
       uploadTasks.push({ item, filename, uint8Array: encrypted });
+
     } else {
+
       // \u516c\u5f00\u9879
+
       if (item.type === 'text') {
+
         payloadItems.push({ mode: 'text', content: item.textContent });
+
       } else {
+
         // \u516c\u5f00\u56fe\u7247\uff1a\u4e0a\u4f20\u539f\u56fe
+
         const ext = item.imageFile ? (item.imageFile.name.split('.').pop() || 'png') : 'png';
+
         const filename = crypto.randomUUID() + '.' + ext;
+
         payloadItems.push({ mode: 'image', file: filename });
+
         uploadTasks.push({ item, filename, uint8Array: new Uint8Array(item.imageData) });
+
       }
+
     }
+
   }
 
+
+
   // \u6784\u5efa payload
+
   const payload = { items: payloadItems };
+
   if (titleText) payload.title = titleText;
+
   if (expire) payload.expire = expire;
 
+
+
   // \u751f\u6210\u4e8c\u7ef4\u7801
+
   const payloadJson = JSON.stringify(payload);
+
   const payloadBase64 = btoa(unescape(encodeURIComponent(payloadJson)));
+
   qrContentString = window.location.origin + window.location.pathname + '#d=' + payloadBase64;
 
+
+
   try {
+
     const qr = qrcode(0, 'L');
+
     qr.addData(qrContentString);
+
     qr.make();
+
     qrContainer.innerHTML = qr.createImgTag(4);
+
     resultDiv.classList.add('show');
 
+
+
     if (expire) {
+
       const expireDate = new Date(expire);
+
       expireHint.textContent = '\u6709\u6548\u671f\u81f3\uff1a' + expireDate.toLocaleString('zh-CN');
+
       expireHint.style.display = 'block';
+
     }
+
+
 
     downloadBtn.style.display = 'inline-block';
 
+
+
     // \u6267\u884c\u4e0a\u4f20\u4efb\u52a1
+
     if (uploadTasks.length > 0) {
-      for (const task of uploadTasks) {
-        const row = document.createElement('div');
-        row.className = 'upload-detail-row';
-        row.id = 'uploadRow-' + task.filename;
-        row.innerHTML = '<span class="u-icon wait">\u23f3</span><span class="u-name">' + task.filename + '</span><span class="u-msg">\u4e0a\u4f20\u4e2d...</span>';
-        detailList.appendChild(row);
-      }
 
       for (const task of uploadTasks) {
-        const row = document.getElementById('uploadRow-' + task.filename);
-        const result = await uploadToGitHub(task.filename, task.uint8Array);
-        if (result.ok) {
-          row.querySelector('.u-icon').className = 'u-icon ok';
-          row.querySelector('.u-icon').textContent = '\u2713';
-          row.querySelector('.u-msg').textContent = '\u4e0a\u4f20\u6210\u529f';
-          row.querySelector('.u-msg').style.color = 'var(--success)';
-        } else {
-          row.querySelector('.u-icon').className = 'u-icon err';
-          row.querySelector('.u-icon').textContent = '\u2717';
-          row.querySelector('.u-msg').textContent = result.msg;
-          row.querySelector('.u-msg').style.color = 'var(--danger)';
-        }
+
+        const row = document.createElement('div');
+
+        row.className = 'upload-detail-row';
+
+        row.id = 'uploadRow-' + task.filename;
+
+        row.innerHTML = '<span class="u-icon wait">\u23f3</span><span class="u-name">' + task.filename + '</span><span class="u-msg">\u4e0a\u4f20\u4e2d...</span>';
+
+        detailList.appendChild(row);
+
       }
+
+
+
+      for (const task of uploadTasks) {
+
+        const row = document.getElementById('uploadRow-' + task.filename);
+
+        const result = await uploadToGitHub(task.filename, task.uint8Array);
+
+        if (result.ok) {
+
+          row.querySelector('.u-icon').className = 'u-icon ok';
+
+          row.querySelector('.u-icon').textContent = '\u2713';
+
+          row.querySelector('.u-msg').textContent = '\u4e0a\u4f20\u6210\u529f';
+
+          row.querySelector('.u-msg').style.color = 'var(--success)';
+
+        } else {
+
+          row.querySelector('.u-icon').className = 'u-icon err';
+
+          row.querySelector('.u-icon').textContent = '\u2717';
+
+          row.querySelector('.u-msg').textContent = result.msg;
+
+          row.querySelector('.u-msg').style.color = 'var(--danger)';
+
+        }
+
+      }
+
     }
+
   } catch (err) {
+
     qrContainer.innerHTML = '<span style="color:#e74c3c;font-size:0.9em">\u751f\u6210\u5931\u8d25\uff1a' + err.message + '</span>';
+
     resultDiv.classList.add('show');
+
   }
+
 });
+
+
 
 // ============ \u4e0b\u8f7d\u9ad8\u6e05\u4e8c\u7ef4\u7801 ============
+
 document.getElementById('downloadBtn').addEventListener('click', async () => {
+
   if (!qrContentString) return;
+
   const btn = document.getElementById('downloadBtn');
+
   btn.textContent = '\u751f\u6210\u4e2d...';
+
   btn.disabled = true;
 
+
+
   const canvas = await renderHighResQR(qrContentString, 1024);
+
   canvas.toBlob((blob) => {
+
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement('a');
+
     a.href = url;
+
     a.download = 'qrcode_' + Date.now() + '.png';
+
     document.body.appendChild(a);
+
     a.click();
+
     document.body.removeChild(a);
+
     URL.revokeObjectURL(url);
+
     btn.textContent = '\u4e0b\u8f7d\u9ad8\u6e05\u4e8c\u7ef4\u7801 (PNG)';
+
     btn.disabled = false;
+
   }, 'image/png');
+
 });
 
+
+
 function renderHighResQR(data, size) {
+
   return new Promise((resolve) => {
+
     const qr = qrcode(0, 'L');
+
     qr.addData(data);
+
     qr.make();
+
     const moduleCount = qr.getModuleCount();
+
     const cellSize = Math.floor(size / moduleCount);
+
     const dataUrl = qr.createDataURL(cellSize, 0);
+
     const img = new Image();
+
     img.onload = () => {
+
       const canvas = document.createElement('canvas');
+
       canvas.width = size;
+
       canvas.height = size;
+
       const ctx = canvas.getContext('2d');
+
       ctx.fillStyle = '#ffffff';
+
       ctx.fillRect(0, 0, size, size);
+
       ctx.drawImage(img, 0, 0, size, size);
+
       resolve(canvas);
+
     };
+
     img.src = dataUrl;
+
   });
+
 }
+
+
 
 // ============ \u5c55\u793a\u9875\u9762\u903b\u8f91 ============
+
 (function initViewPage() {
+
   const hash = window.location.hash;
+
   if (!hash.startsWith('#d=')) return;
 
+
+
   document.body.innerHTML = '';
+
   document.body.className = 'view-page';
 
+
+
   let payload;
+
   try {
+
     const base64 = hash.slice(3);
+
     payload = JSON.parse(decodeURIComponent(escape(atob(base64))));
+
   } catch (e) {
+
     showViewError('\u6570\u636e\u89e3\u6790\u5931\u8d25\uff0c\u4e8c\u7ef4\u7801\u53ef\u80fd\u5df2\u635f\u574f\u3002');
+
     return;
+
   }
+
+
 
   // \u68c0\u67e5\u8fc7\u671f
+
   if (payload.expire && Date.now() > payload.expire) {
+
     showExpired();
+
     return;
+
   }
+
+
 
   if (!payload.items || !Array.isArray(payload.items) || payload.items.length === 0) {
+
     showViewError('\u4e8c\u7ef4\u7801\u5185\u5bb9\u4e3a\u7a7a\u3002');
+
     return;
+
   }
+
+
 
   const publicItems = payload.items.filter(i => !i.file || !i.file.endsWith('.enc'));
+
   const encryptedItems = payload.items.filter(i => i.file && i.file.endsWith('.enc'));
 
+
+
   const card = document.createElement('div');
+
   card.className = 'view-card';
+
+
 
   // \u6807\u9898
+
   if (payload.title) {
+
     const titleEl = document.createElement('div');
+
     titleEl.className = 'view-title';
+
     titleEl.textContent = payload.title;
+
     card.appendChild(titleEl);
+
   }
+
+
 
   const contentArea = document.createElement('div');
+
   contentArea.className = 'content-area';
+
   card.appendChild(contentArea);
 
+
+
   // \u516c\u5f00\u5185\u5bb9
+
   if (publicItems.length > 0) {
+
     if (encryptedItems.length > 0) {
+
       const label = document.createElement('div');
+
       label.className = 'section-label';
+
       label.textContent = '--- \u516c\u5f00\u5185\u5bb9 ---';
+
       contentArea.appendChild(label);
+
     }
+
+
 
     for (const item of publicItems) {
+
       const section = document.createElement('div');
+
       section.className = 'public-section';
+
       if (item.mode === 'text' && item.content !== undefined) {
+
         const p = document.createElement('div');
+
         p.textContent = item.content;
+
         p.style.whiteSpace = 'pre-wrap';
+
         p.style.wordBreak = 'break-word';
+
         section.appendChild(p);
+
       } else if (item.mode === 'image' && item.file) {
+
         const img = document.createElement('img');
+
         img.src = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
+
         img.alt = '\u56fe\u7247';
+
         img.style.maxWidth = '100%';
+
         img.style.borderRadius = '8px';
+
         img.onerror = function() { this.alt = '\u56fe\u7247\u52a0\u8f7d\u5931\u8d25'; this.style.display = 'none'; };
+
         section.appendChild(img);
+
       }
+
       contentArea.appendChild(section);
+
     }
+
   }
+
+
 
   // \u52a0\u5bc6\u5185\u5bb9
+
   if (encryptedItems.length > 0) {
+
     const divider = document.createElement('hr');
+
     divider.className = 'divider';
+
     contentArea.appendChild(divider);
 
+
+
     const sectionLabel = document.createElement('div');
+
     sectionLabel.className = 'section-label';
+
     sectionLabel.textContent = '--- \u52a0\u5bc6\u5185\u5bb9\uff08\u9700\u5bc6\u7801\u89e3\u5bc6\uff09 ---';
+
     contentArea.appendChild(sectionLabel);
 
+
+
     const pwdInput = document.createElement('input');
+
     pwdInput.type = 'password';
+
     pwdInput.placeholder = '\u8f93\u5165\u5bc6\u7801';
+
     pwdInput.style.cssText = 'width:100%;max-width:280px;margin:0 auto 8px;display:block;';
+
     pwdInput.id = 'viewPwdInput';
+
     contentArea.appendChild(pwdInput);
 
+
+
     const hint = document.createElement('div');
+
     hint.className = 'pwd-hint';
+
     hint.id = 'viewPwdHint';
+
     contentArea.appendChild(hint);
 
+
+
     const decryptedArea = document.createElement('div');
+
     decryptedArea.id = 'decryptedArea';
+
     contentArea.appendChild(decryptedArea);
 
+
+
     const btn = document.createElement('button');
+
     btn.textContent = '\u89e3\u5bc6';
+
     btn.className = 'generate-btn';
+
     btn.style.cssText = 'max-width:280px;margin:0 auto;display:block;';
+
     btn.addEventListener('click', async () => {
+
       const password = pwdInput.value;
+
       if (!password) {
+
         hint.textContent = '\u8bf7\u8f93\u5165\u5bc6\u7801';
+
         hint.style.color = '#e74c3c';
+
         return;
+
       }
+
+
 
       btn.disabled = true;
+
       btn.textContent = '\u89e3\u5bc6\u4e2d...';
+
       hint.textContent = '\u6b63\u5728\u5c1d\u8bd5\u89e3\u5bc6...';
+
       hint.style.color = 'var(--muted)';
+
       decryptedArea.innerHTML = '';
 
+
+
       let anySuccess = false;
+
       for (const item of encryptedItems) {
+
         try {
+
           const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
+
           const resp = await fetch(fileUrl);
+
           if (!resp.ok) continue;
+
           const buffer = await resp.arrayBuffer();
+
           const decrypted = await decryptImage(password, new Uint8Array(buffer));
 
+
+
           anySuccess = true;
+
           const section = document.createElement('div');
+
           section.style.marginTop = '12px';
 
+
+
           if (item.mode === 'text') {
+
             const p = document.createElement('div');
+
             p.textContent = new TextDecoder().decode(decrypted);
+
             p.style.whiteSpace = 'pre-wrap';
+
             p.style.wordBreak = 'break-word';
+
             p.style.color = 'var(--text)';
+
             section.appendChild(p);
+
           } else {
+
             const blob = new Blob([decrypted]);
+
             const blobUrl = URL.createObjectURL(blob);
+
             const img = document.createElement('img');
+
             img.src = blobUrl;
+
             img.alt = '\u89e3\u5bc6\u540e\u7684\u56fe\u7247';
+
             img.style.maxWidth = '100%';
+
             img.style.borderRadius = '8px';
+
             section.appendChild(img);
+
           }
+
           decryptedArea.appendChild(section);
+
         } catch (e) {
+
           // \u89e3\u5bc6\u5931\u8d25\uff0c\u8df3\u8fc7\u8be5\u9879
+
         }
+
       }
+
+
 
       btn.disabled = false;
+
       btn.textContent = '\u89e3\u5bc6';
+
       if (anySuccess) {
+
         hint.textContent = '\u89e3\u5bc6\u6210\u529f';
+
         hint.style.color = 'var(--success)';
+
         pwdInput.style.display = 'none';
+
         btn.style.display = 'none';
+
       } else {
+
         hint.textContent = '\u5bc6\u7801\u9519\u8bef\uff0c\u8bf7\u91cd\u8bd5';
+
         hint.style.color = '#e74c3c';
+
       }
+
     });
+
     contentArea.appendChild(btn);
+
   }
 
+
+
   const footer = document.createElement('footer');
+
   footer.style.cssText = 'margin-top:18px;color:#555;font-size:0.78em;';
+
   footer.textContent = '\u00A9 Marvis \u5de5\u5177';
+
   card.appendChild(footer);
 
+
+
   document.body.appendChild(card);
+
+
 
   setTimeout(() => {
+
     const pwdInput = document.getElementById('viewPwdInput');
+
     if (pwdInput) pwdInput.focus();
+
   }, 100);
+
 })();
 
+
+
 function showViewError(msg) {
+
   const card = document.createElement('div');
+
   card.className = 'view-card';
+
   const h2 = document.createElement('h2');
+
   h2.textContent = msg;
+
   h2.style.color = '#e74c3c';
+
   card.appendChild(h2);
+
   document.body.appendChild(card);
+
 }
+
+
 
 function showExpired() {
+
   const card = document.createElement('div');
+
   card.className = 'view-card';
+
   const h2 = document.createElement('h2');
+
   h2.textContent = '\u8be5\u4e8c\u7ef4\u7801\u5df2\u8fc7\u671f';
+
   h2.style.color = '#e74c3c';
+
   card.appendChild(h2);
+
   const p = document.createElement('p');
+
   p.style.cssText = 'color:#888;margin-top:12px;';
+
   p.textContent = '\u8bf7\u8054\u7cfb\u5206\u4eab\u8005\u91cd\u65b0\u751f\u6210\u4e8c\u7ef4\u7801\u3002';
+
   card.appendChild(p);
+
   document.body.appendChild(card);
+
 }
 
+
+
 // ============ GitHub \u8bbe\u7f6e\u9762\u677f ============
+
 function initGhSettings() {
+
   const settings = document.getElementById('ghSettings');
+
   const header = document.getElementById('ghSettingsHeader');
+
   const input = document.getElementById('ghTokenInput');
+
   const saveBtn = document.getElementById('ghSaveBtn');
+
+
 
   header.addEventListener('click', () => settings.classList.toggle('open'));
 
+
+
   // Restore saved token
+
   const saved = localStorage.getItem('gh_token');
+
   if (saved) input.value = saved;
 
+
+
   saveBtn.addEventListener('click', () => {
+
     const val = input.value.trim();
+
     if (val) {
+
       localStorage.setItem('gh_token', val);
+
       saveBtn.textContent = '\u2714 \u5df2\u4fdd\u5b58';
+
       saveBtn.classList.add('saved');
+
       setTimeout(() => { saveBtn.textContent = '\u4fdd\u5b58'; saveBtn.classList.remove('saved'); }, 2000);
+
     } else {
+
       localStorage.removeItem('gh_token');
+
       saveBtn.textContent = '\u2714 \u5df2\u6e05\u9664';
+
       saveBtn.classList.add('saved');
+
       setTimeout(() => { saveBtn.textContent = '\u4fdd\u5b58'; saveBtn.classList.remove('saved'); }, 2000);
+
     }
+
   });
+
 }
 
+
+
 // ============ \u521d\u59cb\u5316\uff1a\u9ed8\u8ba4\u6dfb\u52a0\u4e00\u4e2a\u5185\u5bb9\u9879 ============
+
 initGhSettings();
+
 addContentItem();
+
 </script>
+
 </body>
+
 </html>
+
+
 
