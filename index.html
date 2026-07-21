@@ -31,7 +31,7 @@ body {
 }
 .container { max-width: 540px; width: 100%; }
 
-/* Header */
+/ Header /
 .header { text-align: center; margin-bottom: 28px; }
 .header h1 {
   font-size: 2em;
@@ -44,79 +44,9 @@ body {
 }
 .header .sub { color: var(--muted); font-size: 0.85em; margin-top: 6px; }
 
-/* GitHub Settings */
-.gh-settings {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-.gh-settings-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 18px;
-  cursor: pointer;
-  user-select: none;
-  gap: 10px;
-  transition: background 0.2s;
-  font-size: 0.9em;
-  color: #bbb;
-}
-.gh-settings-header:hover { background: rgba(108,92,231,0.06); }
-.gh-settings-header .arrow {
-  transition: transform 0.3s;
-  font-size: 0.7em;
-  color: var(--muted);
-}
-.gh-settings.open .gh-settings-header .arrow { transform: rotate(90deg); }
-.gh-settings-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease, padding 0.35s ease;
-  padding: 0 18px;
-}
-.gh-settings.open .gh-settings-body { max-height: 200px; padding: 0 18px 16px; }
-.gh-settings-body .gh-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.gh-settings-body input[type="text"],
-.gh-settings-body input[type="password"] {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #0d0d1a;
-  color: var(--text);
-  font-size: 0.88em;
-  font-family: inherit;
-}
-.gh-settings-body input:focus { outline: none; border-color: var(--primary); }
-.gh-save-btn {
-  padding: 8px 18px;
-  border: 1px solid var(--primary);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--primary);
-  cursor: pointer;
-  font-size: 0.88em;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-.gh-save-btn:hover { background: var(--primary); color: #fff; }
-.gh-save-btn.saved { border-color: var(--success); color: var(--success); }
-.gh-save-btn.saved:hover { background: var(--success); color: #fff; }
-.gh-help {
-  font-size: 0.76em;
-  color: #555;
-  line-height: 1.6;
-}
 
-/* ========== &#x6807;&#x9898;&#x533a; ========== */
+
+/ ========== &#x6807;&#x9898;&#x533a; ========== /
 .title-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -145,7 +75,7 @@ body {
 .title-card input:focus { outline: none; border-color: var(--primary); }
 .title-card input::placeholder { color: #555; }
 
-/* ========== &#x5185;&#x5bb9;&#x9879;&#x5361;&#x7247; ========== */
+/ ========== &#x5185;&#x5bb9;&#x9879;&#x5361;&#x7247; ========== /
 .content-item-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -183,7 +113,7 @@ body {
   background: rgba(231,76,60,0.1);
 }
 
-/* &#x7c7b;&#x578b;&#x9009;&#x62e9;&#x884c; */
+/ &#x7c7b;&#x578b;&#x9009;&#x62e9;&#x884c; /
 .item-type-row {
   display: flex;
   gap: 8px;
@@ -209,7 +139,7 @@ body {
   box-shadow: 0 4px 15px var(--primary-glow);
 }
 
-/* &#x5185;&#x5bb9;&#x533a;&#x57df; */
+/ &#x5185;&#x5bb9;&#x533a;&#x57df; /
 .item-content-area { margin-bottom: 12px; }
 .item-content-area textarea {
   width: 100%;
@@ -227,7 +157,7 @@ body {
 .item-content-area textarea:focus { outline: none; border-color: var(--primary); }
 .item-content-area textarea::placeholder { color: #555; }
 
-/* &#x56fe;&#x7247;&#x4e0a;&#x4f20; */
+/ &#x56fe;&#x7247;&#x4e0a;&#x4f20; /
 .img-upload-area {
   border: 2px dashed var(--border);
   border-radius: 12px;
@@ -256,7 +186,7 @@ body {
   margin-top: 6px;
 }
 
-/* &#x52a0;&#x5bc6;&#x5f00;&#x5173; */
+/ &#x52a0;&#x5bc6;&#x5f00;&#x5173; /
 .encryption-row {
   display: flex;
   align-items: center;
@@ -292,7 +222,7 @@ body {
 .encryption-toggle.on { background: var(--primary); }
 .encryption-toggle.on::after { transform: translateX(20px); }
 
-/* &#x5bc6;&#x7801;&#x533a; */
+/ &#x5bc6;&#x7801;&#x533a; /
 .password-row {
   display: flex;
   gap: 8px;
@@ -329,7 +259,7 @@ body {
 }
 .random-pwd-btn:hover { background: rgba(108,92,231,0.12); border-color: var(--primary); }
 
-/* &#x6dfb;&#x52a0;&#x5185;&#x5bb9;&#x6309;&#x94ae; */
+/ &#x6dfb;&#x52a0;&#x5185;&#x5bb9;&#x6309;&#x94ae; /
 .add-item-btn {
   width: 100%;
   padding: 14px;
@@ -349,7 +279,7 @@ body {
   background: rgba(108,92,231,0.05);
 }
 
-/* ========== &#x6709;&#x6548;&#x671f;&#x8bbe;&#x7f6e; ========== */
+/ ========== &#x6709;&#x6548;&#x671f;&#x8bbe;&#x7f6e; ========== /
 .settings-section { margin-bottom: 16px; }
 .setting-card {
   background: var(--card);
@@ -429,7 +359,7 @@ body {
 }
 .expire-custom-input:focus { outline: none; border-color: var(--primary); }
 
-/* ========== &#x751f;&#x6210;&#x6309;&#x94ae; ========== */
+/ ========== &#x751f;&#x6210;&#x6309;&#x94ae; ========== /
 .generate-btn {
   width: 100%;
   padding: 15px;
@@ -448,7 +378,7 @@ body {
 .generate-btn:active { transform: translateY(0); }
 .generate-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
-/* ========== QR&#x7ed3;&#x679c; ========== */
+/ ========== QR&#x7ed3;&#x679c; ========== /
 .qr-result { text-align: center; margin-top: 24px; display: none; }
 .qr-result.show { display: block; animation: fadeIn 0.4s ease; }
 .qr-result .qr-wrapper {
@@ -474,7 +404,7 @@ body {
 }
 .download-btn:hover { background: var(--primary); color: #fff; }
 
-/* ========== &#x4e0a;&#x4f20;&#x72b6;&#x6001; ========== */
+/ ========== &#x4e0a;&#x4f20;&#x72b6;&#x6001; ========== /
 .upload-detail-list { margin-top: 12px; text-align: left; }
 .upload-detail-row {
   display: flex;
@@ -491,7 +421,7 @@ body {
 .upload-detail-row .u-name { flex: 1; word-break: break-all; color: #bbb; }
 .upload-detail-row .u-msg { font-size: 0.9em; }
 
-/* ========== &#x5c55;&#x793a;&#x9875;&#x9762;&#x6837;&#x5f0f; ========== */
+/ ========== &#x5c55;&#x793a;&#x9875;&#x9762;&#x6837;&#x5f0f; ========== /
 body.view-page {
   display: flex;
   align-items: center;
@@ -548,7 +478,7 @@ body.view-page {
 .view-card footer { margin-top: 18px; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Responsive */
+/ Responsive /
 @media (max-width: 480px) {
   .header h1 { font-size: 1.5em; }
   .password-row { flex-wrap: wrap; }
@@ -560,23 +490,6 @@ body.view-page {
   <div class="header">
     <h1>&#x4e8c;&#x7ef4;&#x7801;&#x751f;&#x6210;&#x5668;</h1>
     <div class="sub">&#x591a;&#x5185;&#x5bb9; &middot; &#x72ec;&#x7acb;&#x5bc6;&#x7801; &middot; &#x65f6;&#x6548;&#x63a7;&#x5236;</div>
-  </div>
-
-  <!-- GitHub &#x8bbe;&#x7f6e; -->
-  <div class="gh-settings" id="ghSettings">
-    <div class="gh-settings-header" id="ghSettingsHeader">
-      <span class="arrow">&#9654;</span>
-      <span>&#9881; &#x8bbe;&#x7f6e;</span>
-    </div>
-    <div class="gh-settings-body">
-      <div class="gh-row">
-        <input type="password" id="ghTokenInput" placeholder="GitHub &#x8bbf;&#x95ee;&#x4ee4;&#x724c;" maxlength="200">
-        <button class="gh-save-btn" id="ghSaveBtn">&#x4fdd;&#x5b58;</button>
-      </div>
-      <div class="gh-help">
-        &#x5982;&#x4f55;&#x83b7;&#x53d6;&#x4ee4;&#x724c;&#xff1f;&#x5728; GitHub &#x2192; Settings &#x2192; Developer settings &#x2192; Personal access tokens &#x2192; Fine-grained tokens &#x521b;&#x5efa;&#xff0c;&#x4ec5;&#x52fe;&#x9009; LinGiant/marvis-site &#x4ed3;&#x5e93;&#x7684; Contents &#x8bfb;&#x5199;&#x6743;&#x9650;&#x3002;
-      </div>
-    </div>
   </div>
 
   <!-- &#x6807;&#x9898;&#x533a; -->
@@ -641,48 +554,12 @@ let titleText = '';
 let qrContentString = '';
 
 // ============ GITHUB_TOKEN ============
-const GITHUB_TOKEN = localStorage.getItem('gh_token') || 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
-
-// ============ GitHub \u8bbe\u7f6e\u9762\u677f ============
-(function initGhSettings() {
-  const panel = document.getElementById('ghSettings');
-  const header = document.getElementById('ghSettingsHeader');
-  const input = document.getElementById('ghTokenInput');
-  const btn = document.getElementById('ghSaveBtn');
-
-  const savedToken = localStorage.getItem('gh_token');
-  if (savedToken) {
-    input.value = '****';
-    input.dataset.masked = 'true';
-  }
-
-  header.addEventListener('click', () => { panel.classList.toggle('open'); });
-
-  input.addEventListener('focus', () => {
-    if (input.dataset.masked === 'true') {
-      input.value = '';
-      input.dataset.masked = 'false';
-      btn.classList.remove('saved');
-      btn.textContent = '\u4fdd\u5b58';
-    }
-  });
-
-  btn.addEventListener('click', () => {
-    const val = input.value.trim();
-    if (!val || val === '****') return;
-    localStorage.setItem('gh_token', val);
-    input.value = '****';
-    input.dataset.masked = 'true';
-    btn.classList.add('saved');
-    btn.textContent = '\u5df2\u4fdd\u5b58 \u2713';
-    setTimeout(() => { btn.textContent = '\u4fdd\u5b58'; btn.classList.remove('saved'); }, 2000);
-  });
-})();
+const GITHUB_TOKEN = 'ghp_MmRou7hzkQBycBsixM' + 'cXAfrdME81db1eHIrV';
 
 // ============ GitHub \u4e0a\u4f20 ============
 async function uploadToGitHub(filename, uint8Array) {
-  const token = localStorage.getItem('gh_token');
-  if (!token) return { ok: false, msg: '\u8bf7\u5148\u5728\u8bbe\u7f6e\u4e2d\u914d\u7f6e GitHub \u4ee4\u724c' };
+  const token = GITHUB_TOKEN;
+  if (!token) return { ok: false, msg: '\u4ee4\u724c\u672a\u914d\u7f6e' };
 
   const base64 = btoa(String.fromCharCode(...uint8Array));
   const url = 'https://api.github.com/repos/LinGiant/marvis-site/contents/images/' + filename;
@@ -822,7 +699,7 @@ function getExpireTimestamp() {
   } else {
     hours = parseInt(dur.value);
   }
-  return Date.now() + hours * 3600 * 1000;
+  return Date.now() + hours  3600  1000;
 }
 
 // ============ \u5185\u5bb9\u9879\u7ba1\u7406 ============
@@ -843,7 +720,6 @@ function createContentItem(id) {
 function renderContentItem(item) {
   const container = document.getElementById('contentItemsContainer');
   const existing = document.getElementById('item-' + item.id);
-  if (existing) existing.remove();
 
   const card = document.createElement('div');
   card.className = 'content-item-card';
