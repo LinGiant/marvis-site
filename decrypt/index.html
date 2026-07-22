@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<![CDATA[<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -47,8 +47,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <script>
 !function(){
 function $(id){return document.getElementById(id)}
-function b64Decode(str){var b=str.replace(/-/g,'+').replace(/_/g,'_');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}
-function b64ToBytes(str){var b=str.replace(/-/g,'+').replace(/_/g,'_');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+function b64Decode(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}
+function b64ToBytes(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
 
 var box=$('box'),_rawPayload='';
 
@@ -56,7 +56,7 @@ var box=$('box'),_rawPayload='';
 var urlParams=new URLSearchParams(location.search);
 var shortKey=urlParams.get('k');
 if(shortKey){
-  var r2Base='__R2_PUBLIC_BASE_URL__'; // set by deploy script
+  var r2Base='https://pub-7b946c83d857493788aacd230595d88e.r2.dev'; // set by deploy script
   var r2Url=r2Base+'/qrdata/'+shortKey+'.json';
   box.innerHTML='<div class="msg"><div class="icon">&#9203;</div><p>正在加载数据...</p></div>';
   fetch(r2Url).then(function(r){
@@ -140,4 +140,4 @@ function doDecrypt(idx){
 }();
 </script>
 </body>
-</html>
+</html>]]>
