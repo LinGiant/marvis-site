@@ -47,10 +47,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <script>
 !function(){
 function $(id){return document.getElementById(id)}
-function b64Decode(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}
-function b64ToBytes(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+function b64Decode(str){var b=str.replace(/-/g,'+').replace(/_/g,'_');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}
+function b64ToBytes(str){var b=str.replace(/-/g,'+').replace(/_/g,'_');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
 
-var box=$('box'),hash=location.hash.slice(1);
+var box=$('box'),_rawPayload='';
+
+// --- R2 channel: ?k= short key ---
+var urlParams=new URLSearchParams(location.search);
+var shortKey=urlParams.get('k');
+if(shortKey){
+  var r2Base='__R2_PUBLIC_BASE_URL__'; // set by deploy script
+  var r2Url=r2Base+'/qrdata/'+shortKey+'.json';
+  box.innerHTML='<div class="msg"><div class="icon">&#9203;</div><p>正在加载数据...</p></div>';
+  fetch(r2Url).then(function(r){
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return r.text();
+  }).then(renderPayload).catch(function(){
+    box.innerHTML='<div class="msg"><div class="icon">&#10060;</div><p>加载数据失败<br>请检查网络后重试</p></div>';
+  });
+  return
+}
+
+// --- Legacy hash channel (backward compatible) ---
+var hash=location.hash.slice(1);
 if(!hash){box.innerHTML='<div class="msg"><div class="icon">&#128236;</div><p>未找到加密数据<br>请重新扫描二维码</p></div>';return}
 
 var decoded;
@@ -64,6 +83,7 @@ if(decoded.indexOf('http://')===0||decoded.indexOf('https://')===0){
 renderPayload(decoded);
 
 function renderPayload(raw){
+  _rawPayload=raw;
   var p;try{p=JSON.parse(raw)}catch(e){box.innerHTML='<div class="msg"><div class="icon">&#10060;</div><p>数据解析失败</p></div>';return}
   if(!p.payloads||!p.payloads.length){box.innerHTML='<div class="msg"><div class="icon">&#128236;</div><p>二维码中没有内容</p></div>';return}
   var list=p.payloads,h='';
@@ -94,7 +114,7 @@ function doDecrypt(idx){
   var pw=pwEl.value;if(!pw){erEl.textContent='请输入密码';erEl.className='err on';return}
   erEl.className='err';
 
-  var raw=b64Decode(location.hash.slice(1));
+  var raw=_rawPayload;
   function tryDecrypt(text){
     var p;try{p=JSON.parse(text)}catch(e){erEl.textContent='数据解析失败';erEl.className='err on';return}
     var enc=p.payloads[idx].enc;
