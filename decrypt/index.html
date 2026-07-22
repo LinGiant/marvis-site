@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
+<title>二维码解密</title>
+<style>
+html{color-scheme:light!important;forced-color-adjust:none;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+html,body{background:#f5f5f5!important;color:#333!important}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto;background:#fff!important;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden}
+.header{background:linear-gradient(135deg,#FF6B35,#FF8C5A)!important;color:#fff!important;padding:20px;text-align:center}
+.header h1{font-size:20px;font-weight:600;margin-bottom:4px;color:#fff!important}
+.header p{font-size:13px;opacity:.85;color:#fff!important}
+.content{padding:16px;background:#fff!important}
+.item{border:1px solid #eee;border-radius:8px;padding:14px;margin-bottom:10px;background:#fff!important}
+.item-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.item-num{background:#FF6B35!important;color:#fff!important;min-width:22px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.item-status{font-size:13px;font-weight:500}
+.item-status.lock{color:#E17055!important}
+.item-status.open{color:#00B894!important}
+.pw-line{display:flex;gap:8px}
+.pw-line input{flex:1;height:40px;border:1px solid #ddd;border-radius:6px;padding:0 12px;font-size:14px;outline:0;background:#fff!important;color:#333!important;-webkit-appearance:none}
+.pw-line input:focus{border-color:#FF6B35}
+.pw-line button{height:40px;padding:0 16px;background:#FF6B35!important;color:#fff!important;border:0;border-radius:6px;font-size:14px;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
+.result{margin-top:8px;padding:10px;background:#f8f9fa!important;border-radius:6px;font-size:14px;line-height:1.6;word-break:break-word;display:none;color:#333!important}
+.result.on{display:block}
+.result img{max-width:100%;border-radius:4px;margin-top:6px}
+.err{color:#D63031!important;font-size:12px;margin-top:4px;display:none;background:#fff!important}
+.err.on{display:block}
+.msg{text-align:center;padding:30px 16px;color:#999!important;font-size:14px;background:#fff!important}
+.msg .icon{font-size:36px;margin-bottom:10px}
+.footer{text-align:center;color:#bbb!important;font-size:11px;padding:12px;background:#fff!important}
+@supports(-webkit-overflow-scrolling:touch){body{padding:16px}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header"><h1>加密内容查看</h1><p>输入密码解密查看内容</p></div>
+<div class="content" id="box"></div>
+<div class="footer">QRCode 生成器 · 端到端加密</div>
+</div>
+
+<script>
+!function(){
+function $(id){return document.getElementById(id)}
+function b64Decode(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}
+function b64ToBytes(str){var b=str.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';var r=atob(b),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+
+var box=$('box'),hash=location.hash.slice(1);
+if(!hash){box.innerHTML='<div class="msg"><div class="icon">&#128236;</div><p>未找到加密数据<br>请重新扫描二维码</p></div>';return}
+
+var decoded;
+try{decoded=b64Decode(hash)}catch(e){box.innerHTML='<div class="msg"><div class="icon">&#10060;</div><p>二维码数据无效<br>请重新扫描</p></div>';return}
+
+if(decoded.indexOf('http://')===0||decoded.indexOf('https://')===0){
+  box.innerHTML='<div class="msg"><div class="icon">&#9203;</div><p>正在加载数据...</p></div>';
+  fetch(decoded).then(function(r){return r.text()}).then(renderPayload).catch(function(){box.innerHTML='<div class="msg"><div class="icon">&#10060;</div><p>加载数据失败<br>请检查网络后重试</p></div>'});
+  return
+}
+renderPayload(decoded);
+
+function renderPayload(raw){
+  var p;try{p=JSON.parse(raw)}catch(e){box.innerHTML='<div class="msg"><div class="icon">&#10060;</div><p>数据解析失败</p></div>';return}
+  if(!p.payloads||!p.payloads.length){box.innerHTML='<div class="msg"><div class="icon">&#128236;</div><p>二维码中没有内容</p></div>';return}
+  var list=p.payloads,h='';
+  for(var i=0;i<list.length;i++){
+    var o=list[i];
+    h+='<div class="item"><div class="item-top"><div class="item-num">'+(i+1)+'</div>';
+    if(o.plain){
+      h+='<div class="item-status open">无需密码</div></div>';
+      var t=o.plain;try{var j=JSON.parse(o.plain);if(j.image){t=(j.content||'')+'<br><img src="'+j.image+'" alt="">'}}catch(_){}
+      h+='<div class="result on">'+t+'</div>';
+    }else if(o.enc){
+      h+='<div class="item-status lock" id="st'+i+'">需要密码</div></div>';
+      h+='<div class="pw-line"><input type="password" id="pw'+i+'" placeholder="输入密码"><button data-idx="'+i+'">解密</button></div>';
+      h+='<div class="err" id="er'+i+'"></div><div class="result" id="rs'+i+'"></div>';
+    }
+    h+='</div>';
+  }
+  box.innerHTML=h;
+
+  var btns=box.querySelectorAll('button[data-idx]');
+  for(var k=0;k<btns.length;k++){btns[k].onclick=function(){doDecrypt(parseInt(this.getAttribute('data-idx')))}};
+  var inps=box.querySelectorAll('input[type=password]');
+  for(var m=0;m<inps.length;m++){(function(idx){inps[m].onkeydown=function(e){if(e.keyCode===13)doDecrypt(idx)}})(m)}
+}
+
+function doDecrypt(idx){
+  var pwEl=$('pw'+idx),rsEl=$('rs'+idx),erEl=$('er'+idx),stEl=$('st'+idx);
+  var pw=pwEl.value;if(!pw){erEl.textContent='请输入密码';erEl.className='err on';return}
+  erEl.className='err';
+
+  var raw=b64Decode(location.hash.slice(1));
+  function tryDecrypt(text){
+    var p;try{p=JSON.parse(text)}catch(e){erEl.textContent='数据解析失败';erEl.className='err on';return}
+    var enc=p.payloads[idx].enc;
+    try{
+      var c=b64ToBytes(enc),iv=c.slice(0,16),salt=c.slice(16,32),ct=c.slice(32);
+      var pwB=new TextEncoder().encode(pw);
+      crypto.subtle.importKey('raw',pwB,{name:'PBKDF2'},false,['deriveKey']).then(function(km){
+        return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},km,{name:'AES-CBC',length:256},false,['decrypt'])
+      }).then(function(key){
+        return crypto.subtle.decrypt({name:'AES-CBC',iv:iv},key,ct)
+      }).then(function(buf){
+        var txt=new TextDecoder().decode(buf);
+        try{var j=JSON.parse(txt);var d='';if(j.content)d+=j.content;if(j.image){if(d)d+='<br>';d+='<img src="'+j.image+'" alt="">'}if(d)txt=d}catch(_){}
+        rsEl.innerHTML=txt;rsEl.className='result on';stEl.textContent='已解密';stEl.className='item-status open'
+      }).catch(function(){erEl.textContent='密码错误或数据损坏';erEl.className='err on'})
+    }catch(e){erEl.textContent='解密失败';erEl.className='err on'}
+  }
+
+  if(raw.indexOf('http://')===0||raw.indexOf('https://')===0){
+    fetch(raw).then(function(r){return r.text()}).then(tryDecrypt).catch(function(){erEl.textContent='加载数据失败';erEl.className='err on'})
+  }else{tryDecrypt(raw)}
+}
+}();
+</script>
+</body>
+</html>
