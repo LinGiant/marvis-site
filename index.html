@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 
 <style>
-/* ===== Retro Premium â å¤å¤ç®çº¦é«ç«¯ ===== */
+/* ===== Retro Premium — 复古简约高端 ===== */
 :root {
   --bg: #f3ede4;
   --card: #eae2d5;
@@ -359,7 +359,7 @@ body {
 .upload-detail-row .u-name { flex: 1; word-break: break-all; color: #6b4d35; }
 .upload-detail-row .u-msg { font-size: 0.9em; }
 
-/* ===== View Page (æ«ç å±ç¤ºé¡µ) ===== */
+/* ===== View Page (扫码展示页) ===== */
 body.view-page {
   display: flex; align-items: center; justify-content: center;
   padding: 40px 16px;
@@ -602,19 +602,30 @@ const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
 
 
 
-// ============ GitHub ä¸ä¼  ============
+// ============ GitHub 上传 ============
 
 function base64Encode(uint8Array) {
   return new Promise((resolve) => {
-    var CHUNK_SIZE = 0x7FFE;
-    var result = '';
-    for (var offset = 0; offset < uint8Array.length; offset += CHUNK_SIZE) {
-      var end = Math.min(offset + CHUNK_SIZE, uint8Array.length);
-      var chunk = Array.prototype.slice.call(uint8Array.subarray(offset, end));
-      var binary = String.fromCharCode.apply(null, chunk);
+    const batchSize = 65536; // Safe chunk size
+    let result = '';
+    let offset = 0;
+    function processBatch() {
+      const end = Math.min(offset + batchSize, uint8Array.length);
+      const batch = uint8Array.subarray(offset, end);
+      // Safe conversion without apply
+      let binary = '';
+      for (let i = 0; i < batch.length; i++) {
+        binary += String.fromCharCode(batch[i]);
+      }
       result += btoa(binary);
+      offset = end;
+      if (offset < uint8Array.length) {
+        setTimeout(processBatch, 0);
+      } else {
+        resolve(result);
+      }
     }
-    resolve(result);
+    processBatch();
   });
 }
 
@@ -649,8 +660,6 @@ async function uploadToGitHub(filename, uint8Array, onProgress) {
     const xhr = new XMLHttpRequest();
 
     xhr.open('PUT', url);
-    xhr.timeout = 300000;
-    xhr.ontimeout = function() { resolve({ ok: false, msg: '上传超时', filename }); };
 
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
@@ -690,7 +699,7 @@ async function uploadToGitHub(filename, uint8Array, onProgress) {
 
     };
 
-    xhr.onerror = () => resolve({ ok: false, msg: 'ç½ç»éè¯¯', filename });
+    xhr.onerror = () => resolve({ ok: false, msg: '网络错误', filename });
 
     xhr.send(bodyStr);
 
@@ -1136,9 +1145,9 @@ document.getElementById('contentItemsContainer').addEventListener('click', funct
 
         case 'togglePwdVisibility':
       {
-        const input = document.querySelector('input[data-id="' + itemId + '"][data-action="updatePassword"]');
+        const input = document.querySelector('input[data-id="' + id + '"][data-action="updatePassword"]');
         if (input) {
-          const btn = document.querySelector('button[data-action="togglePwdVisibility"][data-id="' + itemId + '"]');
+          const btn = document.querySelector('button[data-action="togglePwdVisibility"][data-id="' + id + '"]');
           if (input.type === 'password') {
             input.type = 'text';
             if (btn) btn.textContent = '\ud83d\udc40';
@@ -1263,7 +1272,7 @@ document.getElementById('contentItemsContainer').addEventListener('change', asyn
     const sizeMB = (dataSize / (1024 * 1024)).toFixed(1);
     item.imageInfo = '\u5f85\u52a0\u8f7d\u5c3a\u5bf8... \u00b7 ' + sizeMB + ' MB';
 
-    // å è½½ç²¾ç¡®å°ºå¯¸
+    // 加载精确尺寸
     const img = new Image();
     const finalSizeMB = sizeMB;
     img.onload = () => {
@@ -1467,7 +1476,7 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 
       } else {
 
-        dataToEncrypt = item.imageData;
+        dataToEncrypt = await item.imageFile.arrayBuffer();
 
       }
 
@@ -1497,7 +1506,8 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 
         payloadItems.push({ mode: 'image', file: filename });
 
-        uploadTasks.push({ item, filename, uint8Array: new Uint8Array(item.imageData) });
+        const buffer = await item.imageFile.arrayBuffer();
+uploadTasks.push({ item, filename, uint8Array: new Uint8Array(buffer) });
 
       }
 
@@ -1585,11 +1595,11 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
 
           if (phase === 'encoding') {
 
-            row.querySelector('.u-msg').textContent = 'æ­£å¨ç¼ç ...';
+            row.querySelector('.u-msg').textContent = '正在编码...';
 
           } else {
 
-            row.querySelector('.u-msg').textContent = 'ä¸ä¼ ä¸­ ' + pct + '%';
+            row.querySelector('.u-msg').textContent = '上传中 ' + pct + '%';
 
           }
 
@@ -1879,11 +1889,11 @@ function renderHighResQR(data, size) {
 
         section.appendChild(wrapper);
 
-        // å¼æ­¥ fetch ä¸è½½ + ååè¿åº¦ + è¶æ¶æ§å¶
+        // 异步 fetch 下载 + 分块进度 + 超时控制
 
         (async () => {
 
-          const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
+          const fileUrl = 'https://jolly-voice-78ed.2417611398.workers.dev/LinGiant/marvis-site/main/images/' + item.file;
 
           const controller = new AbortController();
 
@@ -1899,7 +1909,7 @@ function renderHighResQR(data, size) {
 
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
-            // å°è¯æµå¼ååè¯»åï¼æ¯æè¿åº¦æ¾ç¤ºï¼
+            // 尝试流式分块读取（支持进度显示）
 
             if (resp.body && typeof resp.body.getReader === 'function') {
 
@@ -1941,7 +1951,7 @@ function renderHighResQR(data, size) {
 
               } catch (streamErr) {
 
-                // æµå¼è¯»åå¤±è´¥ï¼éæ°è¯·æ±è·åå®æ´æä»¶
+                // 流式读取失败，重新请求获取完整文件
                 loadingHint.textContent = '\u6b63\u5728\u4e0b\u8f7d\u56fe\u7247...';
                 const resp2 = await fetch(fileUrl);
                 if (!resp2.ok) throw new Error('HTTP ' + resp2.status);
@@ -1951,7 +1961,7 @@ function renderHighResQR(data, size) {
 
             } else {
 
-              // æµè§å¨ä¸æ¯æ ReadableStreamï¼ç´æ¥ç¨ blob()
+              // 浏览器不支持 ReadableStream，直接用 blob()
               blob = await resp.blob();
 
             }
@@ -2074,9 +2084,9 @@ function renderHighResQR(data, size) {
 
       btn.disabled = true;
 
-      btn.textContent = 'è§£å¯ä¸­...';
+      btn.textContent = '解密中...';
 
-      hint.textContent = 'æ­£å¨ä¸è½½æä»¶...';
+      hint.textContent = '正在下载文件...';
 
       hint.style.color = 'var(--muted)';
 
@@ -2090,9 +2100,9 @@ function renderHighResQR(data, size) {
 
         try {
 
-          const fileUrl = 'https://raw.githubusercontent.com/LinGiant/marvis-site/main/images/' + item.file;
+          const fileUrl = 'https://jolly-voice-78ed.2417611398.workers.dev/LinGiant/marvis-site/main/images/' + item.file;
 
-          // ååä¸è½½ + è¿åº¦æ¾ç¤º + è¶æ¶æ§å¶ï¼å¸¦åéï¼
+          // 分块下载 + 进度显示 + 超时控制（带回退）
 
           const controller = new AbortController();
 
@@ -2110,7 +2120,7 @@ function renderHighResQR(data, size) {
 
             if (!resp.ok) continue;
 
-            // å°è¯æµå¼ååè¯»åï¼æ¯æè¿åº¦æ¾ç¤ºï¼
+            // 尝试流式分块读取（支持进度显示）
 
             if (resp.body && typeof resp.body.getReader === 'function') {
 
@@ -2138,17 +2148,17 @@ function renderHighResQR(data, size) {
 
                     const pct = Math.round((received / contentLength) * 100);
 
-                    hint.textContent = 'æ­£å¨ä¸è½½æä»¶... ' + pct + '%';
+                    hint.textContent = '正在下载文件... ' + pct + '%';
 
                   } else {
 
-                    hint.textContent = 'æ­£å¨ä¸è½½æä»¶... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
+                    hint.textContent = '正在下载文件... ' + (received / 1024 / 1024).toFixed(1) + 'MB';
 
                   }
 
                 }
 
-                // åå¹¶ææåå
+                // 合并所有分块
 
                 const totalLength = chunks.reduce((acc, c) => acc + c.length, 0);
 
@@ -2168,17 +2178,17 @@ function renderHighResQR(data, size) {
 
               } catch (streamErr) {
 
-                // æµå¼è¯»åå¤±è´¥ï¼åéå° arrayBuffer
+                // 流式读取失败，回退到 arrayBuffer
 
               }
 
             }
 
-            // åéï¼å¨é arrayBufferï¼æ è¿åº¦æ¾ç¤ºä½å¯é ï¼
+            // 回退：全量 arrayBuffer（无进度显示但可靠）
 
             if (!downloadOk) {
 
-              hint.textContent = 'æ­£å¨ä¸è½½æä»¶...';
+              hint.textContent = '正在下载文件...';
 
               buffer = new Uint8Array(await resp.arrayBuffer());
 
@@ -2192,13 +2202,13 @@ function renderHighResQR(data, size) {
 
             if (e.name === 'AbortError') {
 
-              hint.textContent = 'ä¸è½½è¶æ¶ï¼è¯·æ£æ¥ç½ç»åéè¯';
+              hint.textContent = '下载超时，请检查网络后重试';
 
               hint.style.color = '#e74c3c';
 
             } else {
 
-              hint.textContent = 'ä¸è½½å¤±è´¥ï¼è¯·éè¯';
+              hint.textContent = '下载失败，请重试';
 
               hint.style.color = '#e74c3c';
 
@@ -2210,7 +2220,7 @@ function renderHighResQR(data, size) {
 
           if (!downloadOk) continue;
 
-          hint.textContent = 'æ­£å¨è§£å¯æä»¶...';
+          hint.textContent = '正在解密文件...';
 
           hint.style.color = 'var(--muted)';
 
@@ -2445,7 +2455,6 @@ addContentItem();
 </body>
 
 </html>
-
 
 
 
