@@ -2118,7 +2118,7 @@ function renderHighResQR(data, size) {
 
             clearTimeout(timeoutId);
 
-            if (!resp.ok) continue;
+            if (!resp.ok) { hint.textContent = ""; continue; }
 
             // 尝试流式分块读取（支持进度显示）
 
@@ -2178,21 +2178,16 @@ function renderHighResQR(data, size) {
 
               } catch (streamErr) {
 
-                // 流式读取失败，回退到 arrayBuffer
+                // 流式读取失败，重新 fetch 下载
+
+                try {
+                  const resp2 = await fetch(fileUrl);
+                  if (!resp2.ok) { hint.textContent = "文件下载失败(" + resp2.status + ")"; hint.style.color = "#e74c3c"; continue; }
+                  buffer = new Uint8Array(await resp2.arrayBuffer());
+                  downloadOk = true;
+                } catch (refetchErr) { hint.textContent = "文件下载失败，请检查网络"; hint.style.color = "#e74c3c"; continue; }
 
               }
-
-            }
-
-            // 回退：全量 arrayBuffer（无进度显示但可靠）
-
-            if (!downloadOk) {
-
-              hint.textContent = '正在下载文件...';
-
-              buffer = new Uint8Array(await resp.arrayBuffer());
-
-              downloadOk = true;
 
             }
 
